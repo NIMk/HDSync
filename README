@@ -1,0 +1,12 @@
+
+Here are scripts used for setup of the syncstarter at boot time
+
+handshake programs are used for the network syncstarter
+in order to verify the presence of all scheduled players
+they are blocking processes, after their successful exit(0)
+everyone should be online
+
+the GNU version of netcat is required, honouring the flag -c
+
+- jrml
+
