@@ -7,17 +7,17 @@ if [ -z $1 ]; then
 fi
 IFACE="$1"
 
-NC="../src/netcat -c"
+NC="../src/netcat"
 
 # some more version might be around that is not supported..
 
 IP="`/sbin/ifconfig $IFACE | grep 'inet addr'| awk '{print $2}'|cut -f2 -d:`"
 
 echo "listening on $IFACE configured with address $IP ..."
-master="`echo | $NC -u -l -p 3332`"
+master="`echo | $NC -c -u -l -p 3332`"
 
 echo "contacted by master $master"
-echo "$IP" | netcat -u $master 3331
+echo "$IP" | $NC -u $master 3331
 
 echo "master replied"
 
