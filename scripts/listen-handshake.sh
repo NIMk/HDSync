@@ -7,21 +7,7 @@ if [ -z $1 ]; then
 fi
 IFACE="$1"
 
-NC="/opt/ivysync/bin/netcat"
-# check if it is openbsd netcat
-NC_ver="`$NC -h 2>&1|head -n 1 | awk '{print $1}'`"
-if [ "$NC_ver" = "OpenBSD" ]; then
-	echo "using OpenBSD version of netcat"
-	NC="$NC -q 0"
-elif [ "$NC_ver" = "GNU" ]; then
-	echo "using GNU version of netcat"
-	NC="$NC -c"
-else
-	echo "error: your version of netcat is not compatible"
-	echo "please install an OpenBSD or GNU netcat implementation"
-	echo "found on this system: `netcat -h 2>&1|head -n1`"
-	exit 1
-fi
+NC="../src/netcat -c"
 
 # some more version might be around that is not supported..
 
