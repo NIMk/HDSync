@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 if [ -z $1 ]; then
         echo "usage: $0 network_interface"
@@ -7,7 +7,7 @@ if [ -z $1 ]; then
 fi
 IFACE="$1"
 
-IP="`ifconfig $IFACE | grep 'inet addr'| awk '{print $2}'|cut -f2 -d:`"
+IP="`/sbin/ifconfig $IFACE | grep 'inet addr'| awk '{print $2}'|cut -f2 -d:`"
 
 
 NC="../src/netcat -c"

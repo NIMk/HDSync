@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 if [ -z $1 ]; then
 	echo "usage: $0 network_interface"
@@ -11,7 +11,7 @@ NC="../src/netcat -c"
 
 # some more version might be around that is not supported..
 
-IP="`ifconfig $IFACE | grep 'inet addr'| awk '{print $2}'|cut -f2 -d:`"
+IP="`/sbin/ifconfig $IFACE | grep 'inet addr'| awk '{print $2}'|cut -f2 -d:`"
 
 echo "listening on $IFACE configured with address $IP ..."
 master="`echo | $NC -u -l -p 3332`"
