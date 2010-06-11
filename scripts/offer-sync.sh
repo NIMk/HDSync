@@ -9,7 +9,15 @@ IFACE="$1"
 
 IP="`/sbin/ifconfig $IFACE | grep 'inet addr'| awk '{print $2}'|cut -f2 -d:`"
 
-NC="../src/netcat -c"
+if [ -z $APPROOT ]; then
+    NC="../src/netcat -c"
+    BC="../src/broadcaster"
+else
+    NC="$APPROOT/bin/netcat -c"
+    BC="$APPROOT/bin/broadcaster"
+fi
+
+
 
 
 ready=false
@@ -20,7 +28,7 @@ ready=false
 
 while ! [ -r /tmp/handshake.$i.ok ]; do
     sleep 1
-    ../src/broadcaster 255.255.255.255 3332 $IP 1>&2 > /dev/null
+    $BC 255.255.255.255 3332 $IP 1>&2 > /dev/null
     echo -n "."
 done	
 echo -n " answer: `cat /tmp/handshake.$i.ok`"

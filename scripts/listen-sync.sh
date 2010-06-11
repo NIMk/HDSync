@@ -7,7 +7,13 @@ if [ -z $1 ]; then
 fi
 IFACE="$1"
 
-NC="../src/netcat"
+if [ -z $APPROOT ]; then
+    NC="../src/netcat -c"
+    BC="../src/broadcaster"
+else
+    NC="$APPROOT/bin/netcat -c"
+    BC="$APPROOT/bin/broadcaster"
+fi
 
 # some more version might be around that is not supported..
 

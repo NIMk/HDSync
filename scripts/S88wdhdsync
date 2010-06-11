@@ -4,12 +4,20 @@ APPROOT=/apps/wdhdsync/
 
 USBROOT=`mount | awk '/.tmp.mnt/ { print $3}'`
 
+if ! [ -r $USBROOT/wdhdsync.conf ]; then
+    echo "config file not found" > /tmp/wdhdsync.log
+    echo "place wdhdsync.conf in your usb key" >> /tmp/wdhdsync.log
+    exit 0
+fi
+
 # source settings
 . $USBROOT/wdhdsync.conf
 
+export APPROOT
+
 if [ "x$SYNC_ROLE" = "offer" ]; then
-    $APPROOT/bin/offer-sync.sh > $SYNC_LOG
+    $APPROOT/bin/offer-sync.sh eth0 > $SYNC_LOG
 else
-    $APPROOT/bin/listen-sync.sh > $SYNC_LOG
+    $APPROOT/bin/listen-sync.sh eth0 > $SYNC_LOG
 
 fi
