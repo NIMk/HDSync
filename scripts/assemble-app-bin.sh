@@ -3,8 +3,7 @@
 # This file was part of WDTV Tools (http://wdtvtools.sourceforge.net/).
 # Copyright (C) 2009 Elmar Weber <wdtv@elmarweber.org>
 #
-# further modifications to support WDLXTV (use of CRAMFS)
-# and adaptation to wdhdsync by Denis Roio <jaromil@dyne.org>
+# adaptation to wdhdsync by Denis Roio <jaromil@dyne.org>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -24,11 +23,12 @@
                  
 appname=wdhdsync
 imagefile=./$appname.app.bin
+loopdir=./$appname.app.loop
 
 # create and fill in appdir
 appdir=$appname.app
 
-sudo rm -rf $appdir
+sudo rm -rf $appdir $imagefile $loopdir
 
 mkdir -p $appdir
 mkdir -p $appdir/bin
@@ -36,16 +36,23 @@ mkdir -p $appdir/etc/init.d
 
 cp -v src/netcat $appdir/bin &&
 cp -v src/broadcaster $appdir/bin &&
+strip $appdir/bin/* &&
 cp -v scripts/*-sync.sh $appdir/bin &&
 cp -v scripts/S88wdhdsync $appdir/etc/init.d &&
 cp -v README $appdir &&
 
 sudo chown -R root:root $appdir
 
+dd if=/dev/zero of=$imagefile bs=1K count=500 &&
+/sbin/mkfs.ext3 -F $imagefile &&
+/sbin/tune2fs -c 0 -i 0 $imagefile &&
+mkdir -p $loopdir &&
+sudo mount -o loop $imagefile $loopdir &&
+cp -a $appdir/* $loopdir/ &&
+sudo rm -rf $loopdir/lost+found &&
+sudo chown root:root -R $loopdir &&
+sudo umount $loopdir &&
+sudo rm -rf $loopdir $appdir && 
+sudo /sbin/fsck.ext3 $imagefile
 
-/sbin/mkfs.cramfs $appdir $imagefile
-
-/sbin/fsck.cramfs -v $imagefile
-
-sudo rm -rf $appdir
 
