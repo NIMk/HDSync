@@ -8,16 +8,17 @@ if ! [ -r $USBROOT/wdhdsync.conf ]; then
     echo "config file not found" > /tmp/wdhdsync.log
     echo "place wdhdsync.conf in your usb key" >> /tmp/wdhdsync.log
     exit 0
-fi
-
+else
 # source settings
-. $USBROOT/wdhdsync.conf
+    . $USBROOT/wdhdsync.conf
+    echo "config file found in $USBROOT/wdhdsync.conf" > $SYNC_LOG
+    echo "sync role configured to: $SYNC_ROLE" >> $SYNC_LOG
+fi
 
 export APPROOT
 
 if [ "x$SYNC_ROLE" = "offer" ]; then
-    $APPROOT/bin/offer-sync.sh eth0 > $SYNC_LOG
+    $APPROOT/bin/offer-sync.sh eth0 >> $SYNC_LOG
 else
-    $APPROOT/bin/listen-sync.sh eth0 > $SYNC_LOG
-
+    $APPROOT/bin/listen-sync.sh eth0 >> $SYNC_LOG
 fi

@@ -39,6 +39,7 @@ cp -v src/broadcaster $appdir/bin &&
 strip $appdir/bin/* &&
 cp -v scripts/*-sync.sh $appdir/bin &&
 cp -v scripts/S88wdhdsync $appdir/etc/init.d &&
+chmod a+x $appdir/etc/init.d/S88wdhdsync &&
 cp -v README $appdir &&
 
 sudo chown -R root:root $appdir
