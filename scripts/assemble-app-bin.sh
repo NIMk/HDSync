@@ -28,6 +28,8 @@ imagefile=./$appname.app.bin
 # create and fill in appdir
 appdir=$appname.app
 
+sudo rm -rf $appdir
+
 mkdir -p $appdir
 mkdir -p $appdir/bin
 mkdir -p $appdir/etc/init.d
@@ -37,18 +39,13 @@ cp -v src/broadcaster $appdir/bin &&
 cp -v scripts/*-sync.sh $appdir/bin &&
 cp -v scripts/S88wdhdsync $appdir/etc/init.d &&
 cp -v README $appdir &&
+
 sudo chown -R root:root $appdir
 
-#dd if=/dev/zero of=$imagefile bs=1M count=$imagesize &&
-mkfs.cramfs -n $appname $appdir $imagefile &&
-# tune2fs -c 0 -i 0 $imagefile &&
-#mkdir -p $loopdir &&
-#mount -o loop $imagefile $loopdir &&
-#cp -a $appdir/* $loopdir/ &&
-#chown root:root -R $loopdir &&
-#umount $loopdir &&
-#rmdir $loopdir  && 
-fsck.cramfs $imagefile
 
-rm -rf $appdir
+/sbin/mkfs.cramfs $appdir $imagefile
+
+/sbin/fsck.cramfs -v $imagefile
+
+sudo rm -rf $appdir
 
