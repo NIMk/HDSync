@@ -9,7 +9,6 @@ IFACE="$1"
 
 IP="`/sbin/ifconfig $IFACE | grep 'inet addr'| awk '{print $2}'|cut -f2 -d:`"
 
-
 NC="../src/netcat -c"
 
 

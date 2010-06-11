@@ -1,0 +1,15 @@
+#!/bin/sh
+
+APPROOT=/apps/wdhdsync/
+
+USBROOT=`mount | awk '/.tmp.mnt/ { print $3}'`
+
+# source settings
+. $USBROOT/wdhdsync.conf
+
+if [ "x$SYNC_ROLE" = "offer" ]; then
+    $APPROOT/bin/offer-sync.sh > $SYNC_LOG
+else
+    $APPROOT/bin/listen-sync.sh > $SYNC_LOG
+
+fi

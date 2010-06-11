@@ -18,3 +18,7 @@ depcomp
 install-sh
 missing
 stamp-h1
+wdhdsync-loop
+wdhdsync.app
+wdhdsync.app.bin
+
