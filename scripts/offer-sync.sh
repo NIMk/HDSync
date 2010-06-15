@@ -36,7 +36,7 @@ echo "broadcasting sync signals"
 for b in 1 2 3 4 5; do
     echo -n "$b: `date +%X` "
     $BC 255.255.255.255 3332 $IP
-    sleep 1
+    sleep 2
 done
 
 echo "harvesting replies"
@@ -50,7 +50,7 @@ for l in `cat /tmp/listeners`; do
 done
 
 echo "waiting for players to get ready"
-sleep 10
+sleep 20
 echo "syncstart!"
 $BC 255.255.255.255 3336 s
 
