@@ -41,11 +41,11 @@ echo "offered sync by $offer"
 # repeat udp replies to offer until ack
 echo "replying with our ip until ack"
 ack=""
-while [ "$ack" != "$offer" ]; do
+while [ "$ack" = "" ]; do
     sleep 1
     echo "$IP" | $NC -u $offer 3331
     echo -n "."
-    ack=`cat /tmp/offer.replies | sort | uniq`
+    ack=`cat /tmp/offer.replies`
 done
 
 echo "ack received, we are channel $ack"
