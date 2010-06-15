@@ -18,6 +18,11 @@ else
 fi
 
 IP="`ifconfig $IFACE | grep 'inet addr'| awk '{print $2}'|cut -f2 -d:`"
+# make sure dhcp has assigned an address, else wait and retry
+while [ "$IP" = "" ]; do
+    IP="`ifconfig $IFACE | grep 'inet addr'| awk '{print $2}'|cut -f2 -d:`"
+    sleep 1
+done
 
 echo "listening on $IFACE configured with address $IP ..." 
 offer="`echo | $NC -c -u -l -p 3332`"

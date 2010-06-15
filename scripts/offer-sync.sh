@@ -28,7 +28,8 @@ echo "broadcasting sync signals"
 # background listener
 (while [ true ]; do
     answer=`echo | $NC -u -l -p 3331`;
-    echo $answer >> /tmp/listener.replies) &
+    echo $answer >> /tmp/listener.replies
+    done) &
 
 # send broadcast signals
 for b in 1 2 3 4 5; do
