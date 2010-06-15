@@ -72,7 +72,7 @@ echo "p" > /tmp/ir_injection
  
 echo "ready: awaiting syncstarter signal"
 # exit after connection
-$NC -u -l -p 3333 -e true
+$NC -u -l -p 3336 -e true
  
 # "press play on tape"
 echo "p" > /tmp/ir_injection; sleep 0.1

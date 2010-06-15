@@ -50,9 +50,9 @@ for l in `cat /tmp/listeners`; do
 done
 
 echo "waiting for players to get ready"
-sleep 5
+sleep 10
 echo "syncstart!"
-$BC 255.255.255.255 3333 s
+$BC 255.255.255.255 3336 s
 
 
 
