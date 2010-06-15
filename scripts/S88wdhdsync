@@ -17,7 +17,7 @@ fi
 
 export APPROOT
 
-if [ "x$SYNC_ROLE" = "offer" ]; then
+if [ "x$SYNC_ROLE" = "xoffer" ]; then
     $APPROOT/bin/offer-sync.sh eth0 >> $SYNC_LOG
 else
     $APPROOT/bin/listen-sync.sh eth0 >> $SYNC_LOG
