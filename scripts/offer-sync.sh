@@ -21,20 +21,36 @@ fi
 
 ready=false
 
-rm -f /tmp/handshake.ok
-echo "broadcasting sync signal"
+touch /tmp/listener.replies
+
+echo "broadcasting sync signals"
 
 # background listener
-(answer=`echo | $NC -u -l -p 3331`;
-    echo $answer > /tmp/handshake.ok) &
+(while [ true ]; do
+    answer=`echo | $NC -u -l -p 3331`;
+    echo $answer >> /tmp/listener.replies) &
 
-while ! [ -r /tmp/handshake.ok ]; do
-    sleep 1
-    echo -n "[`date +%X`] "
+# send broadcast signals
+for b in 1 2 3 4 5; do
     $BC 255.255.255.255 3332 $IP
+    echo -n "$b: `date +%X` "
+    sleep 1
 done
 
-echo -n " answer: `cat /tmp/handshake.ok`"
-echo
+echo "harvesting replies"
+cat /tmp/listener.replies | sort | uniq > /tmp/listeners
+
+echo "sending acks"
+c=1
+for l in `cat /tmp/listeners`; do
+    echo "$c: $l"
+    echo "$c" | $NC -u $l 3333
+done
+
+echo "waiting for players to get ready"
+sleep 5
+echo "syncstart!"
+$BC 255.255.255.255 3333 s
+
 
 

@@ -17,15 +17,28 @@ else
     BC="$APPROOT/bin/broadcaster"
 fi
 
-
-
 IP="`ifconfig $IFACE | grep 'inet addr'| awk '{print $2}'|cut -f2 -d:`"
 
 echo "listening on $IFACE configured with address $IP ..." 
-master="`echo | $NC -c -u -l -p 3332`"
+offer="`echo | $NC -c -u -l -p 3332`"
 
-echo "contacted by master $master"
-echo "$IP" | $NC -u $master 3331
+echo "offered sync by $offer"
+
+# repeat udp replies to offer until ack
+echo "replying with our address"
+while [ -z $ack ]; do
+    echo "$IP" | $NC -u $offer 3331
+    echo -n "."
+    sleep 1
+done
+    
+echo "waiting for ack.."
+while [ -z $ack ]; do
+    echo -n "."
+    ack=`echo | $NC -c -u -l -p 3333`
+done
+
+echo "ack received, we are channel $ack"
 
 # poor man's syncstarting:
 # emulating remote control commands
@@ -33,7 +46,7 @@ echo "$IP" | $NC -u $master 3331
 # we could do much better if this damn Sigma SDK would be open
 # but so far, so good.
 
-echo "preparing playback"
+echo "handshake completed, preparing for playback"
 # go to the video
 echo "r" > /tmp/ir_injection; sleep 0.333
 echo "r" > /tmp/ir_injection; sleep 0.333
@@ -47,7 +60,7 @@ sleep 5
 # pause it
 echo "p" > /tmp/ir_injection
  
-echo "awaiting syncstarter signal..."
+echo "ready: awaiting syncstarter signal"
 # exit after connection
 $NC -u -l -p 3333 -e true
  
