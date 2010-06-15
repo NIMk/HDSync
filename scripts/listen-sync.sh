@@ -33,27 +33,31 @@ echo "$IP" | $NC -u $master 3331
 # we could do much better if this damn Sigma SDK would be open
 # but so far, so good.
 
+echo "preparing playback"
 # go to the video
-Echo "r" > /tmp/ir_injection; sleep 0.333
-Echo "r" > /tmp/ir_injection; sleep 0.333
-Echo "r" > /tmp/ir_injection; sleep 0.333
+echo "r" > /tmp/ir_injection; sleep 0.333
+echo "r" > /tmp/ir_injection; sleep 0.333
+echo "r" > /tmp/ir_injection; sleep 0.333
 # play it
-Echo "p" > /tmp/ir_injection; sleep 1
-Echo "# be sure we restart the video"
-Echo "n" > /tmp/ir_injection; sleep 1
-Echo "# wait 5 secs"
-Sleep 5
-Echo "# pause it"
-Echo "p" > /tmp/ir_injection
+echo "p" > /tmp/ir_injection; sleep 1
+# be sure we restart the video
+echo "n" > /tmp/ir_injection; sleep 1
+# wait 5 secs
+sleep 5
+# pause it
+echo "p" > /tmp/ir_injection
  
+echo "awaiting syncstarter signal..."
 # exit after connection
 $NC -u -l -p 3333 -e true
  
 # "press play on tape"
-Echo "p" > /tmp/ir_injection; sleep 0.1
+echo "p" > /tmp/ir_injection; sleep 0.1
 # take off OSD
-Echo "n" > /tmp/ir_injection
- 
+echo "n" > /tmp/ir_injection
+
+echo "synced playback started."
+
 
 
 exit 0
