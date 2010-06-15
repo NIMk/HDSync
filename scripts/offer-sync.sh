@@ -21,6 +21,7 @@ fi
 
 ready=false
 
+rm -f /tmp/listener.replies
 touch /tmp/listener.replies
 
 echo "broadcasting sync signals"
@@ -33,8 +34,8 @@ echo "broadcasting sync signals"
 
 # send broadcast signals
 for b in 1 2 3 4 5; do
-    $BC 255.255.255.255 3332 $IP
     echo -n "$b: `date +%X` "
+    $BC 255.255.255.255 3332 $IP
     sleep 1
 done
 

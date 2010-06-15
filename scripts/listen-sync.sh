@@ -27,20 +27,25 @@ done
 echo "listening on $IFACE configured with address $IP ..." 
 offer="`echo | $NC -c -u -l -p 3332`"
 
+rm -f /tmp/offer.replies
+touch /tmp/offer.replies
+
 echo "offered sync by $offer"
 
+# background listener for acks
+(while [ true ]; do
+    answer=`echo | $NC -u -l -p 3333`;
+    echo $answer >> /tmp/offer.replies
+    done) &
+
 # repeat udp replies to offer until ack
-echo "replying with our address"
-while [ -z $ack ]; do
+echo "replying with our ip until ack"
+ack=""
+while [ "$ack" != "$offer" ]; do
+    sleep 1
     echo "$IP" | $NC -u $offer 3331
     echo -n "."
-    sleep 1
-done
-    
-echo "waiting for ack.."
-while [ -z $ack ]; do
-    echo -n "."
-    ack=`echo | $NC -c -u -l -p 3333`
+    ack=`cat /tmp/offer.replies | sort | uniq`
 done
 
 echo "ack received, we are channel $ack"
