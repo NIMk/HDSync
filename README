@@ -1,12 +1,33 @@
 
-Here are scripts used for setup of the syncstarter at boot time
 
-handshake programs are used for the network syncstarter
-in order to verify the presence of all scheduled players
-they are blocking processes, after their successful exit(0)
-everyone should be online
+from the tradition of Montevideo / Time Based Arts, NIMk.nl presents:
 
-the GNU version of netcat is required, honouring the flag -c
+  ,,              ,,
+`7MM            `7MM
+  MM              MM
+  MMpMMMb.   ,M""bMM      ,pP"Ybd `7M'   `MF'`7MMpMMMb.  ,p6"bo
+  MM    MM ,AP    MM      8I   `"   VA   ,V    MM    MM 6M'  OO
+  MM    MM 8MI    MM      `YMMMa.    VA ,V     MM    MM 8M
+  MM    MM `Mb    MM      L.   I8     VVV      MM    MM YM.    ,
+.JMML  JMML.`Wbmd"MML.    M9mmmP'     ,V     .JMML  JMML.YMbmd'
+                                     ,V
+                                  OOb'
 
-- jrml
+      A network based sync-starter for multi-channel HD Video
+
+
+The digital video syncstarter software is developed and employed by to
+provide frame accurate synced playback of multiple videos on multiple
+screens.
+
+In the video art field there are many artworks requiring the real-time
+synced playback of audio/video: HDSync provides such a functionality
+for HD decoders, to sync HD video playback on multiple devices.
+
+This software package requires compilation and adaptation for special
+devices, it is released free and open source (GNU GPL v3) in the hope
+it will be useful, but WITHOUT ANY WARRANTY.
+
+In case you need assistance to setup your own HD sync-starter, you can
+contact us, see details on http://nimk.nl/syncstarter
 
