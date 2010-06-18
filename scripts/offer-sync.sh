@@ -24,6 +24,9 @@ if [ -z $1 ]; then
 fi
 IFACE="$1"
 
+# wait that boot up is done
+sleep 20
+
 IP="`ifconfig $IFACE | grep 'inet addr'| awk '{print $2}'|cut -f2 -d:`"
 
 if [ -z $APPROOT ]; then
@@ -39,10 +42,7 @@ ready=false
 rm -f /tmp/listener.replies
 touch /tmp/listener.replies
 
-# wait that boot up is done
-sleep 20
-
-echo "broadcasting sync signals"
+echo "broadcasting offer signals from $IP"
 
 # background listener
 (while [ true ]; do
