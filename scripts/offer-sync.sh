@@ -39,6 +39,9 @@ ready=false
 rm -f /tmp/listener.replies
 touch /tmp/listener.replies
 
+# wait that boot up is done
+sleep 20
+
 echo "broadcasting sync signals"
 
 # background listener
