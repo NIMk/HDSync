@@ -1,0 +1,98 @@
+#!/bin/sh
+##
+## in this file you can enter commands that will be executed with the init.d scripts
+## typos / syntax errors will prevent the osd from booting
+## this file is only executed if it is at the root of an attached device at boot
+##
+## this file is executed when the wdtv starts/boots up AND when /usr/sbin/resume is called
+## so operations placed here should not be adversely affected by multiple execution
+## the above applies if you utilize /conf/S00user-script as well
+## 
+## several examples are provided below, uncomment (delete #) them to use
+##
+## config_tool commands only need to be executed _once_ then they can be re-commented
+##
+
+## change background image between 3 stock options
+##
+## original background:
+#config_tool -c BACKGROUND_IMAGE=original_bg.jpg
+## eM82's backdrop background:
+#config_tool -c BACKGROUND_IMAGE=eM82_bg.jpg
+## wood panel (default) background:
+#config_tool -c BACKGROUND_IMAGE=villa_bg.jpg
+## some random location (absolute)
+#config_tool -c BACKGROUND_IMAGE=/tmp/media/usb/some/random/location.jpg
+
+## permanently set timezone
+## http://www.timeanddate.com/library/abbreviations/timezones/
+## below is for Pacific North America
+config_tool -c TIMEZONE=CET
+
+## permanently set hostname
+#config_tool -c DEVICE_NAME=SomeHostName
+
+##  telnet server
+#config_tool -c TELNETD=OFF
+
+##  pure-ftpd server
+config_tool -c FTPD=OFF
+
+## dropbear ssh server
+config_tool -c SSHD=ON
+
+## enable NTP (network time) 
+## if you use a wireless adapter you will also have to set WIRELESS_DRIVER
+#### *** ONLY with wireless: NTP adds ~20s to the initial boot of the device *** 
+#### *** due to the bringing up and acquisition of wireless network address  ***
+## -- if NTP fails because of slow address acquire you can increase delay to NTP_DELAY
+#config_tool -c NTP=ON
+
+## custom NTP server
+#config_tool -c NTPSERVER=pool.ntp.org
+
+## NTP delay is seconds (in case of slow wireless adapter)
+#config_tool -c NTP_DELAY=0
+
+## to set NTP with wireless adapters: 
+## (choose the proper one)
+#config_tool -c WIRELESS_DRIVER=rt2870sta
+#config_tool -c WIRELESS_DRIVER=rt3070sta
+#config_tool -c WIRELESS_DRIVER=rt3572sta
+
+## Disable mt-daapd digital audio server (saves ~10MB ram)
+config_tool -c MT-DAAPD=OFF
+
+## Disable UMSP (default enabled - REQUIRES LIGHTTPD=ON TO WORK)
+config_tool -c UMSP=OFF
+
+## Disable lighttpd webserver (default enabled)
+config_tool -c LIGHTTPD=OFF
+
+## Enable/Disable Samba Windows share server (default: OFF)
+## ON:
+#config_tool -c ENABLE_SAMBA_SHARE=1
+## OFF:
+config_tool -c ENABLE_SAMBA_SHARE=0
+
+## Select one of the extra translations, that is not selectable from the language options
+## Only possible to set ONE locale
+## Choices:
+## - Netherlands: nl
+## - Greece: gr
+#config_tool -c LOCALE=nl
+#config_tool -c lOCALE=gr
+
+## EIRI (remote control remapping & action)
+## requires /conf/eiri.conf or eiri.conf on device at boot
+#config_tool -c EIRI=ON
+#cp eiri.conf /tmp/eiri.conf
+
+## extra NLS / codepage packages (for non-english character filesystems)
+##
+## NLS packages (default utf8)
+config_tool -c IOCHARSET=utf8
+
+## codepage packages (default cp437)
+config_tool -c CODEPAGE=cp437
+

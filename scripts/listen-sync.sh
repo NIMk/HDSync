@@ -75,7 +75,7 @@ echo "handshake completed, preparing for playback"
 # go to the video
 echo "r" > /tmp/ir_injection; sleep 0.333
 echo "r" > /tmp/ir_injection; sleep 0.333
-echo "r" > /tmp/ir_injection; sleep 0.333
+echo "r" > /tmp/ir_injection; sleep 2
 # play it
 echo "p" > /tmp/ir_injection; sleep 1
 # be sure we restart the video
