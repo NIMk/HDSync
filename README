@@ -1,6 +1,6 @@
 
 
-from the tradition of Montevideo / Time Based Arts, NIMk.nl presents:
+from the tradition of Montevideo / Time Based Arts, NIMk presents:
 
   ,,              ,,
 `7MM            `7MM
@@ -11,23 +11,39 @@ from the tradition of Montevideo / Time Based Arts, NIMk.nl presents:
   MM    MM `Mb    MM      L.   I8     VVV      MM    MM YM.    ,
 .JMML  JMML.`Wbmd"MML.    M9mmmP'     ,V     .JMML  JMML.YMbmd'
                                      ,V
-                                  OOb'
+                                  OOb'              ver. 0.1
 
       A network based sync-starter for multi-channel HD Video
 
 
-The digital video syncstarter software is developed and employed by to
-provide frame accurate synced playback of multiple videos on multiple
+The digital video syncstarter software is developed and employed by
+NIMk to provide synced playback of multiple videos on multiple
 screens.
 
 In the video art field there are many artworks requiring the real-time
 synced playback of audio/video: HDSync provides such a functionality
 for HD decoders, to sync HD video playback on multiple devices.
 
-This software package requires compilation and adaptation for special
-devices, it is released free and open source (GNU GPL v3) in the hope
-it will be useful, but WITHOUT ANY WARRANTY.
+This is a work in progress.  This initial release is v0.1.
+
+It probably won't be very useful unless you know how to reuse the code
+or cross-compile it for Mips processors.  HDSync is been developed
+in-house at NIMk on a specific hardware configuration (WDHDLive).
+
+At NIMk we use to distribute multi-channel video artworks of artists
+in our catalogue, send them to galleries for exhibition inside "plug
+and play" solution with simple on/off activation; there are no
+guarantees that HDSync is ready to do that for anyone else.
+
+In fact, this software is just at beta stage, testing phase.
+
+The purpose of this release is to make the project open source to
+allow collaboration with developers interested: we release HDSync as
+free and open source (GNU GPL v3) in the hope it will be useful, but
+WITHOUT ANY WARRANTY.
 
 In case you need assistance to setup your own HD sync-starter, you can
-contact us, see details on http://nimk.nl/syncstarter
+contact us and ask a quote, see details on http://nimk.nl/syncstarter
+
+More information on our R&D deparment: http://nimk.nl/eng/research
 
