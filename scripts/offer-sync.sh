@@ -81,16 +81,29 @@ echo "r" > /tmp/ir_injection; sleep 2
 
 echo "waiting for other players to get ready..."
 sleep 20
-echo "syncstart!"
-$BC 255.255.255.255 3336 s
 
-sleep $OFFER_SLEEP
+# loop continuously
+while [ true ]; do
+    lsof | grep videos > /dev/null
+    if [ $? == 0 ]; then
+	# still playing
+	sleep 5
+    else
 
-# "press play on tape"
-echo "p" > /tmp/ir_injection; sleep 0.1
-# take off OSD
-echo "n" > /tmp/ir_injection
+	sync
 
+        # sync start!
+	$BC 255.255.255.255 3336 s
+
+	# configurable wait step
+	sleep $OFFER_SLEEP
+
+        # "press play on tape"
+	echo "p" > /tmp/ir_injection; sleep 0.1
+        # take off OSD
+	echo "n" > /tmp/ir_injection
+    fi
+done
 # play it
 #echo "p" > /tmp/ir_injection; sleep 1
 # be sure we restart the video

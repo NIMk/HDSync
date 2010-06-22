@@ -77,17 +77,28 @@ echo "r" > /tmp/ir_injection; sleep 0.333
 echo "r" > /tmp/ir_injection; sleep 0.333
 echo "r" > /tmp/ir_injection; sleep 2
  
+
 echo "ready: awaiting syncstarter signal"
-# exit after connection
-$NC -u -l -p 3336 -e true
- 
-# "press play on tape"
-echo "p" > /tmp/ir_injection; sleep 0.1
-# take off OSD
-echo "n" > /tmp/ir_injection
 
-echo "synced playback started."
+# loop continuously
+while [ true ]; do
+    lsof | grep videos > /dev/null
+    if [ $? == 0 ]; then
+	# still playing
+	sleep 5
+    else
 
+	sync
+
+        # exit after connection (-e true)
+	$NC -u -l -p 3336 -e true
+	
+        # "press play on tape"
+	echo "p" > /tmp/ir_injection; sleep 0.1
+        # turn off OSD
+	echo "n" > /tmp/ir_injection
+    fi
+done
 
 # # play it
 # echo "p" > /tmp/ir_injection; sleep 1
