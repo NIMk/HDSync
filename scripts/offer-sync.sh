@@ -78,24 +78,29 @@ echo "handshake completed, preparing for playback"
 echo "r" > /tmp/ir_injection; sleep 0.333
 echo "r" > /tmp/ir_injection; sleep 0.333
 echo "r" > /tmp/ir_injection; sleep 2
-# play it
-echo "p" > /tmp/ir_injection; sleep 1
-# be sure we restart the video
-echo "n" > /tmp/ir_injection; sleep 1
-# wait 5 secs
-sleep 5
-# pause it
-echo "p" > /tmp/ir_injection
 
 echo "waiting for other players to get ready..."
 sleep 20
 echo "syncstart!"
 $BC 255.255.255.255 3336 s
-  
+
+sleep $OFFER_SLEEP
+
 # "press play on tape"
 echo "p" > /tmp/ir_injection; sleep 0.1
 # take off OSD
 echo "n" > /tmp/ir_injection
+
+# play it
+#echo "p" > /tmp/ir_injection; sleep 1
+# be sure we restart the video
+#echo "n" > /tmp/ir_injection; sleep 1
+# wait 5 secs
+#sleep 5
+# pause it
+#echo "p" > /tmp/ir_injection
+
+  
 
 echo "synced playback started."
 

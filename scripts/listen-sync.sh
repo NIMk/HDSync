@@ -76,14 +76,6 @@ echo "handshake completed, preparing for playback"
 echo "r" > /tmp/ir_injection; sleep 0.333
 echo "r" > /tmp/ir_injection; sleep 0.333
 echo "r" > /tmp/ir_injection; sleep 2
-# play it
-echo "p" > /tmp/ir_injection; sleep 1
-# be sure we restart the video
-echo "n" > /tmp/ir_injection; sleep 1
-# wait 5 secs
-sleep 5
-# pause it
-echo "p" > /tmp/ir_injection
  
 echo "ready: awaiting syncstarter signal"
 # exit after connection
@@ -96,6 +88,15 @@ echo "n" > /tmp/ir_injection
 
 echo "synced playback started."
 
+
+# # play it
+# echo "p" > /tmp/ir_injection; sleep 1
+# # be sure we restart the video
+# echo "n" > /tmp/ir_injection; sleep 1
+# # wait 5 secs
+# sleep 5
+# # pause it
+# echo "p" > /tmp/ir_injection
 
 
 exit 0
