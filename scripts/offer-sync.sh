@@ -26,46 +26,18 @@ IFACE="$1"
 
 # wait that boot up is done
 sleep 20
+# offer should always be later than listen
 
-IP="`ifconfig $IFACE | grep 'inet addr'| awk '{print $2}'|cut -f2 -d:`"
 
-if [ -z $APPROOT ]; then
-    NC="../src/netcat -c"
-    BC="../src/broadcaster"
-else
-    NC="$APPROOT/bin/netcat -c"
-    BC="$APPROOT/bin/broadcaster"
-fi
+get_ip $IFACE
 
-ready=false
+get_netcat $APPROOT
 
-rm -f /tmp/listener.replies
-touch /tmp/listener.replies
-
-echo "broadcasting offer signals from $IP"
-
-# background listener
+# launch background listener
 (while [ true ]; do
     answer=`echo | $NC -u -l -p 3331`;
     echo $answer >> /tmp/listener.replies
     done) &
-
-# send broadcast signals
-for b in 1 2 3 4 5; do
-    echo -n "$b: `date +%X` "
-    $BC 255.255.255.255 3332 $IP
-    sleep 2
-done
-
-echo "harvesting replies"
-cat /tmp/listener.replies | sort | uniq > /tmp/listeners
-
-echo "sending acks"
-c=1
-for l in `cat /tmp/listeners`; do
-    echo "$c: $l"
-    echo "$c" | $NC -u $l 3333
-done
 
 # poor man's syncstarting:
 # emulating remote control commands
@@ -79,16 +51,37 @@ echo "r" > /tmp/ir_injection; sleep 0.333
 echo "r" > /tmp/ir_injection; sleep 0.333
 echo "r" > /tmp/ir_injection; sleep 2
 
-echo "waiting for other players to get ready..."
-sleep 20
-
 # loop continuously
 while [ true ]; do
     lsof | grep videos > /dev/null
-    if [ $? == 0 ]; then
-	# still playing
-	sleep 5
-    else
+    sleep 5
+    if [ $? == 1 ]; then	# no video is running
+
+	rm -f /tmp/listener.replies
+	touch /tmp/listener.replies
+
+	echo "broadcasting offer signals from $IP"
+
+        # send broadcast signals
+	for b in 1 2 3 4 5; do
+	    echo -n "$b: `date +%X` "
+	    $BC 255.255.255.255 3332 $IP
+	    sleep 2
+	done
+
+	echo "harvesting replies"
+	cat /tmp/listener.replies | sort | uniq > /tmp/listeners
+
+	echo "sending acks"
+	c=1
+	for l in `cat /tmp/listeners`; do
+	    echo "$c: $l"
+	    echo "$c" | $NC -u $l 3333
+	done
+
+
+	echo "waiting for other players to get ready..."
+	sleep 15
 
 	sync
 
@@ -104,18 +97,6 @@ while [ true ]; do
 	echo "n" > /tmp/ir_injection
     fi
 done
-# play it
-#echo "p" > /tmp/ir_injection; sleep 1
-# be sure we restart the video
-#echo "n" > /tmp/ir_injection; sleep 1
-# wait 5 secs
-#sleep 5
-# pause it
-#echo "p" > /tmp/ir_injection
-
-  
-
-echo "synced playback started."
 
 
 
