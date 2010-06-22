@@ -17,17 +17,12 @@
 
 PATH=/usr/bin:/bin:/usr/sbin:/sbin
 
-if [ -z $1 ]; then
-	echo "usage: $0 network_interface"
-	echo "example: $0 eth0"
-	exit 1
-fi
-IFACE="$1"
+. /apps/wdhdsync/bin/utils-sync.sh
 
 # wait that boot up is done
 sleep 20
 
-get_ip $IFACE
+get_ip $ETH_IFACE
 
 get_netcat $APPROOT
 

@@ -31,6 +31,9 @@ else
 fi
 
 export APPROOT
+export SYNC_LOG
+export OFFER_SLEEP
+export ETH_IFACE
 
 if [ "x$SYNC_ROLE" = "xoffer" ]; then
     $APPROOT/bin/offer-sync.sh eth0 >> $SYNC_LOG
