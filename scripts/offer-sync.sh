@@ -52,8 +52,8 @@ echo "r" > /tmp/ir_injection; sleep 2
 
 # loop continuously
 while [ true ]; do
-    lsof | grep videos > /dev/null
     sleep 5
+    lsof | grep videos > /dev/null
     if [ $? == 1 ]; then	# no video is running
 
 	rm -f /tmp/listener.replies
