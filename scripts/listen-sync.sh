@@ -24,6 +24,9 @@ if [ -z $1 ]; then
 fi
 IFACE="$1"
 
+# wait that boot up is done
+sleep 20
+
 get_ip $IFACE
 
 get_netcat $APPROOT
@@ -42,8 +45,8 @@ get_netcat $APPROOT
 
 echo "handshake completed, preparing for playback"
 # go to the video
-echo "r" > /tmp/ir_injection; sleep 0.333
-echo "r" > /tmp/ir_injection; sleep 0.333
+echo "r" > /tmp/ir_injection; sleep 1
+echo "r" > /tmp/ir_injection; sleep 1
 echo "r" > /tmp/ir_injection; sleep 2
 
 
