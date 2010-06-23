@@ -15,18 +15,18 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-APPROOT=/apps/wdhdsync/
+APPROOT=/apps/hdsync/
 
 USBROOT=`mount | awk '/.tmp.mnt/ { print $3}'`
 
-if ! [ -r $USBROOT/wdhdsync.conf ]; then
-    echo "config file not found" > /tmp/wdhdsync.log
-    echo "place wdhdsync.conf in your usb key" >> /tmp/wdhdsync.log
+if ! [ -r $USBROOT/hdsync.conf ]; then
+    echo "config file not found" > /tmp/hdsync.log
+    echo "place hdsync.conf in your usb key" >> /tmp/hdsync.log
     exit 0
 else
 # source settings
-    . $USBROOT/wdhdsync.conf
-    echo "config file found in $USBROOT/wdhdsync.conf" > $SYNC_LOG
+    . $USBROOT/hdsync.conf
+    echo "config file found in $USBROOT/hdsync.conf" > $SYNC_LOG
     echo "sync role configured to: $SYNC_ROLE" >> $SYNC_LOG
 fi
 

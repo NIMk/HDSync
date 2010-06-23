@@ -17,7 +17,7 @@
 
 PATH=/usr/bin:/bin:/usr/sbin:/sbin
 
-. /apps/wdhdsync/bin/utils-sync.sh
+. /apps/hdsync/bin/utils-sync.sh
 
 # wait that boot up is done
 sleep 20
@@ -32,17 +32,8 @@ get_netcat $APPROOT
     echo $answer >> /tmp/listener.replies
     done) &
 
-# poor man's syncstarting:
-# emulating remote control commands
-#
-# we could do much better if this damn Sigma SDK would be open
-# but so far, so good.
-
-echo "handshake completed, preparing for playback"
-# go to the video
-echo "r" > /tmp/ir_injection; sleep 1
-echo "r" > /tmp/ir_injection; sleep 1
-echo "r" > /tmp/ir_injection; sleep 2
+# will get ready for play button
+prepare_play
 
 # loop continuously
 while [ true ]; do

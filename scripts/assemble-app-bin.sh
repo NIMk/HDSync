@@ -3,7 +3,7 @@
 # This file was part of WDTV Tools (http://wdtvtools.sourceforge.net/).
 # Copyright (C) 2009 Elmar Weber <wdtv@elmarweber.org>
 #
-# adaptation to wdhdsync by Denis Roio <jaromil@dyne.org>
+# adaptation to hdsync by Denis Roio <jaromil@dyne.org>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -21,7 +21,7 @@
 
 # assembly script for application images
                  
-appname=wdhdsync
+appname=hdsync
 imagefile=./$appname.app.bin
 loopdir=./$appname.app.loop
 
@@ -38,8 +38,8 @@ cp -v src/netcat $appdir/bin &&
 cp -v src/broadcaster $appdir/bin &&
 strip $appdir/bin/* &&
 cp -v scripts/*-sync.sh $appdir/bin &&
-cp -v scripts/S88wdhdsync $appdir/etc/init.d &&
-chmod a+x $appdir/etc/init.d/S88wdhdsync &&
+cp -v scripts/S88hdsync $appdir/etc/init.d &&
+chmod a+x $appdir/etc/init.d/S88hdsync &&
 cp -v README $appdir &&
 
 sudo chown -R root:root $appdir
