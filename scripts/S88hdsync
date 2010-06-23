@@ -39,6 +39,8 @@ export ETH_IFACE
 . /apps/hdsync/bin/utils-sync.sh
 
 if [ "x$VIDEO_OUT" != "xdefault" ]; then
+    # wait the boot to complete
+    sleep 15
     switch_output $VIDEO_OUT
 fi
 
