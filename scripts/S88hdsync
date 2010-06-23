@@ -35,6 +35,13 @@ export SYNC_LOG
 export OFFER_SLEEP
 export ETH_IFACE
 
+# load up utils
+. /apps/hdsync/bin/utils-sync.sh
+
+if [ "x$VIDEO_OUT" != "xdefault" ]; then
+    switch_output $VIDEO_OUT
+fi
+
 if [ "x$SYNC_ROLE" = "xoffer" ]; then
     $APPROOT/bin/offer-sync.sh eth0 >> $SYNC_LOG
 else
