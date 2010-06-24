@@ -27,16 +27,21 @@ get_ip() {
 	sleep 1
     done
     echo "listening on $IFACE configured with address $IP ..." 
+    export IP
 }
 
 get_netcat() {
     if [ -z $1 ]; then
-	NC="../src/netcat -c"
+	NC="../src/netcat"
 	BC="../src/broadcaster"
     else
-	NC="$APPROOT/bin/netcat -c"
+	NC="$APPROOT/bin/netcat"
 	BC="$APPROOT/bin/broadcaster"
     fi
+    echo "netcat binaries found:"
+    echo "$BC"
+    echo "$NC"
+    export BC NC
 }
 
 prepare_play() {

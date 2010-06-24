@@ -19,16 +19,13 @@ PATH=/usr/bin:/bin:/usr/sbin:/sbin
 
 . /apps/hdsync/bin/utils-sync.sh
 
-# wait that boot up is done
-sleep 20
-
 get_ip $ETH_IFACE
 
 get_netcat $APPROOT
 
 # launch background listener
 (while [ true ]; do
-    answer=`echo | $NC -u -l -p 3331`;
+    answer=`echo | $NC -c -u -l -p 3331`;
     echo $answer >> /tmp/listener.replies
     done) &
 
@@ -45,11 +42,13 @@ while [ true ]; do
 	touch /tmp/listener.replies
 
 	echo "broadcasting offer signals from $IP"
+	bcast=`echo $IP | awk 'BEGIN { FS="." } {print $1 }'`.255.255.255
+	echo "to netmask $bcast"
 
         # send broadcast signals
 	for b in 1 2 3 4 5; do
 	    echo -n "$b: `date +%X` "
-	    $BC 255.255.255.255 3332 $IP
+	    $BC $bcast 3332 $IP
 	    sleep 2
 	done
 
@@ -60,7 +59,7 @@ while [ true ]; do
 	c=1
 	for l in `cat /tmp/listeners`; do
 	    echo "$c: $l"
-	    echo "$c" | $NC -u $l 3333
+	    echo "$c" | $NC -c -u $l 3333
 	done
 
 
@@ -70,7 +69,7 @@ while [ true ]; do
 	sync
 
         # sync start!
-	$BC 255.255.255.255 3336 s
+	$BC $bcast 3336 s
 
 	# configurable wait step
 	sleep $OFFER_SLEEP

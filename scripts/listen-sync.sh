@@ -19,16 +19,13 @@ PATH=/usr/bin:/bin:/usr/sbin:/sbin
 
 . /apps/hdsync/bin/utils-sync.sh
 
-# wait that boot up is done
-sleep 20
-
 get_ip $ETH_IFACE
 
 get_netcat $APPROOT
 
 # launch background listener for acks
 (while [ true ]; do
-    answer=`echo | $NC -u -l -p 3333`;
+    answer=`echo | $NC -c -u -l -p 3333`;
     echo $answer >> /tmp/offer.replies
     done) &
 
@@ -44,6 +41,8 @@ while [ true ]; do
 	rm -f /tmp/offer.replies
 	touch /tmp/offer.replies
 
+	echo "listening for offers"
+
 	offer="`echo | $NC -c -u -l -p 3332`"
 
 	echo "offered sync by $offer"
@@ -54,7 +53,7 @@ while [ true ]; do
 	ack=""
 	while [ "$ack" = "" ]; do
 	    sleep 1
-	    echo "$IP" | $NC -u $offer 3331
+	    echo "$IP" | $NC -c -u $offer 3331
 	    echo -n "."
 	    ack=`cat /tmp/offer.replies`
 	done
@@ -67,7 +66,7 @@ while [ true ]; do
 
 
         # exit after connection (-e true)
-	$NC -u -l -p 3336 -e true
+	$NC -c -u -l -p 3336 -e true
 	
         # "press play on tape"
 	echo "p" > /tmp/ir_injection; sleep 0.1

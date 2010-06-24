@@ -15,7 +15,10 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-APPROOT=/apps/hdsync/
+# wait the boot to complete
+sleep 15
+
+APPROOT=/apps/hdsync
 
 USBROOT=`mount | awk '/.tmp.mnt/ { print $3}'`
 
@@ -39,13 +42,11 @@ export ETH_IFACE
 . /apps/hdsync/bin/utils-sync.sh
 
 if [ "x$VIDEO_OUT" != "xdefault" ]; then
-    # wait the boot to complete
-    sleep 15
     switch_output $VIDEO_OUT
 fi
 
 if [ "x$SYNC_ROLE" = "xoffer" ]; then
-    $APPROOT/bin/offer-sync.sh eth0 >> $SYNC_LOG
+    $APPROOT/bin/offer-sync.sh >> $SYNC_LOG
 else
-    $APPROOT/bin/listen-sync.sh eth0 >> $SYNC_LOG
+    $APPROOT/bin/listen-sync.sh >> $SYNC_LOG
 fi
