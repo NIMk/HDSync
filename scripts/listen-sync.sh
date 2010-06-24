@@ -72,6 +72,8 @@ while [ true ]; do
 	echo "p" > /tmp/ir_injection; sleep 0.1
         # turn off OSD
 	echo "n" > /tmp/ir_injection
+
+	echo "sync playback started"
     fi
 done
 

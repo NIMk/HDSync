@@ -37,11 +37,12 @@ export APPROOT
 export SYNC_LOG
 export OFFER_SLEEP
 export ETH_IFACE
+export VIDEO_CHANNELS
 
 # load up utils
 . /apps/hdsync/bin/utils-sync.sh
 
-if [ "x$VIDEO_OUT" != "xdefault" ]; then
+if ! [ -z "x$VIDEO_OUT" ]; then
     switch_output $VIDEO_OUT
 fi
 

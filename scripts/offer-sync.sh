@@ -45,11 +45,14 @@ while [ true ]; do
 	bcast=`echo $IP | awk 'BEGIN { FS="." } {print $1 }'`.255.255.255
 	echo "to netmask $bcast"
 
-        # send broadcast signals
-	for b in 1 2 3 4 5; do
+        # send broadcast signals until somebody listens
+	listeners=0
+	expected=`expr $VIDEO_CHANNELS - 1`
+	while [ "$listeners" != "$expected" ]; do
 	    echo -n "$b: `date +%X` "
 	    $BC $bcast 3332 $IP
 	    sleep 2
+	    listeners=`wc -w /tmp/listener.replies | awk '{print $1}'`
 	done
 
 	echo "harvesting replies"
@@ -78,6 +81,9 @@ while [ true ]; do
 	echo "p" > /tmp/ir_injection; sleep 0.1
         # take off OSD
 	echo "n" > /tmp/ir_injection
+
+	echo "sync playback started"
+
     fi
 done
 
