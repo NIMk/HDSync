@@ -1,19 +1,20 @@
 
 
-from the tradition of Montevideo / Time Based Arts, NIMk presents:
-
-  ,,              ,,
-`7MM            `7MM
-  MM              MM
-  MMpMMMb.   ,M""bMM      ,pP"Ybd `7M'   `MF'`7MMpMMMb.  ,p6"bo
-  MM    MM ,AP    MM      8I   `"   VA   ,V    MM    MM 6M'  OO
-  MM    MM 8MI    MM      `YMMMa.    VA ,V     MM    MM 8M
-  MM    MM `Mb    MM      L.   I8     VVV      MM    MM YM.    ,
-.JMML  JMML.`Wbmd"MML.    M9mmmP'     ,V     .JMML  JMML.YMbmd'
-                                     ,V
-                                  OOb'              ver. 0.1
-
-      A network based sync-starter for multi-channel HD Video
+: from the tradition of Montevideo / Time Based Arts, NIMk presents:
+:
+:   ,,              ,,
+: `7MM            `7MM
+:   MM              MM
+:   MMpMMMb.   ,M""bMM      ,pP"Ybd `7M'   `MF'`7MMpMMMb.  ,p6"bo
+:   MM    MM ,AP    MM      8I   `"   VA   ,V    MM    MM 6M'  OO
+:   MM    MM 8MI    MM      `YMMMa.    VA ,V     MM    MM 8M
+:   MM    MM `Mb    MM      L.   I8     VVV      MM    MM YM.    ,
+: .JMML  JMML.`Wbmd"MML.    M9mmmP'     ,V     .JMML  JMML.YMbmd'
+:                                      ,V
+:                                   OOb'              ver. 0.2
+:
+:      A network based sync-starter for multi-channel HD Video
+:                                    by Denis Roio aka Jaromil
 
 
 The digital video syncstarter software is developed and employed by
@@ -24,18 +25,29 @@ In the video art field there are many artworks requiring the real-time
 synced playback of audio/video: HDSync provides such a functionality
 for HD decoders, to sync HD video playback on multiple devices.
 
-This is a work in progress.  This initial release is v0.1.
-
-It probably won't be very useful unless you know how to reuse the code
-or cross-compile it for Mips processors.  HDSync is been developed
-in-house at NIMk on a specific hardware configuration (WDHDLive).
-
 At NIMk we use to distribute multi-channel video artworks of artists
-in our catalogue, send them to galleries for exhibition inside "plug
-and play" solution with simple on/off activation; there are no
-guarantees that HDSync is ready to do that for anyone else.
+in our catalogue, send them to galleries for exhibition with simple
+on/off activation.
 
-In fact, this software is just at beta stage, testing phase.
+More information on our R&D deparment: http://nimk.nl/eng/research
+
+** Usage and compatibility
+
+This package won't be very useful unless you know how to reuse the
+code or cross-compile it for Mips processors.  HDSync is been
+developed in-house at NIMk on a specific hardware configuration (WD HD
+Live) and runds on the WDLXTV firmware by B-rad.
+
+
+** Development in progress
+
+This release can synchronise the playback of multiple devices on the
+same LAN: they can automatically handshake and start playing in sync,
+restoring the sync at every loop. Empirical tests have shown that sync
+will keep below 1 sec. difference, but we still didn't achieve frame
+exact sync.
+
+** Support and warranty
 
 The purpose of this release is to make the project open source to
 allow collaboration with developers interested: we release HDSync as
@@ -45,5 +57,4 @@ WITHOUT ANY WARRANTY.
 In case you need assistance to setup your own HD sync-starter, you can
 contact us and ask a quote, see details on http://nimk.nl/syncstarter
 
-More information on our R&D deparment: http://nimk.nl/eng/research
 

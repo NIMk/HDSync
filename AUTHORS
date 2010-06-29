@@ -3,7 +3,5 @@ The author of HDSync is Denis Roio <jaromil@nimk.nl>
 
 HDSync code includes GNU netcat by Giovanni Giacobbi
 
-This software is packaged to run on B-rad's WDLXTV firmware
-
-
-
+This software is packaged to run on B-rad's WDLXTV firmware and
+benefits by the research and development of the wdlxtv.com community.

@@ -1,3 +1,10 @@
+29 June 2010 - 0.2 "Rites"
+
+	Stable setup for early production use
+	Sync precision below 1 second
+	Automatic handshake of units on LAN
+	Includes bugfixes and code cleanups
+
 15 June 2010 - 0.1
 	Packaging and basic sync in place
 	still incomplete, more tests planned

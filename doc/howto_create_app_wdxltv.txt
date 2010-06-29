@@ -1,0 +1,113 @@
+
+Documentation on wdtvtools wiki
+
+Create Application Images (app.bin Files)
+
+   Both user firmwares for the WDTV, ext3-boot? and WDLXTV?, support
+   application images that can be used to add further capabilities. This
+   can included additional programs that are not available via the
+   OptWare? package manager, new functionality like [27]event-osd or OSD
+   mods to change the UI. All these mods have in common that their files
+   must be packed into an application image to be deployed to the WDTV.
+   This tutorial explains some details and how to create them.
+
+Background
+
+     If the terms ext3 and cramfs ring a bell, you can skip this section.
+
+   Application images (or app.bin files) are a disk with a filesystem in a
+   file. So instead of formatting your HDD you format the file and copy
+   files into it. There are two major file systems that make sense to be
+   used for the app.bin files: ext3 and cramfs.
+
+   ext3 is a widely used Linux filesystem that should be used for app.bin
+   files where the application must write to the app.bin file, e.g. to
+   cache downloaded files. cramfs (compressed ROM file system (don't ask
+   me why is ram instead of rom)) on the other hand is a filesystem that
+   is readonly, so ideally for themes because they are a fixed set of
+   files.
+
+   In general it doesn't matter which one you use when you don't need
+   write access to the app.bin file, but the cramfs has the advantage that
+   it does not take damage in case of a crash due to power loss of the
+   WDTV. Its an unlikely event, but can happen and in this case the
+   app.bin file must be replaced with a fresh copy.
+
+Creating ext3 images
+
+     The following steps can only be done ok a Linux or MacOS system
+     where the e2fsprogs are available. Every normal Linux distribution
+     should have them, you can even install it onto the WDTV and create
+     your images there (# ipkg install e2fsprogs).
+
+   Lets make the following assumptions:
+     * you are in a writable directory, called the working directory from
+       here on
+     * all the files you want to copy to the app.bin file are in a
+       directory called content in your working directory
+     * you are logged in as root
+     * your final application image file should be named cool.app.bin
+
+   First you must create the app.bin file container. This can be done with
+   dd, it copies data from one file to another.
+# dd if=/dev/zero of=./cool.app.bin bs=1M count=8
+
+   This will create an 8 megabyte big file in your working directory
+   filled with zeros. The parameter bs specifies the block size, here 1
+   megabyte (1024 * 1024 bytes) and count gives how often the block size
+   is copied. Next we must create the file system on the file:
+# mkfs.ext3 -F cool.app.bin
+# tune2fs -c 0 -i 0 cool.app.bin
+
+   The first command creates the actual file system, the second one sets
+   some parameters to disable file system checks. After the filesystem is
+   created you can use it by mounting the file to a directory with:
+# mkdir -p cool-loop/
+# mount -o loop cool.app.bin cool-loop/
+
+   This way the filesystem is available in the directory cool-loop. When
+   you copy a file to cool-loop you are actually writing it to the
+   cool.app.bin file. You can now make anything you'd normally do, e.g.
+   copy the contents of the content directory to it:
+# cp -r content/* cool-loop/
+
+   When you are done you should make sure that all files are owned by root
+   because this is the only user on a normal WDTV firmware.
+# chown -R root:root
+
+   Finally you can unmount the file system to make sure everything is
+   written to the cool.app.bin file:
+# umount cool-loop/
+
+Utility Script
+
+   When you are done doing this manually and know what you are doing, you
+   can use a script from the [28]WDTV Tools project:
+   [29]assemble-app-bin.sh
+
+   You can download it with
+# wget http://wdtvtools.svn.sourceforge.net/viewvc/wdtvtools/trunk/appbinutils/a
+ssemble-app-bin.sh
+
+   The same stuff we have done above is done with the script by executing
+   it with the following parameters
+# assemble-app-bin.sh cool 8 content
+
+   (first parameter is the app name, second one the size in MB and the
+   last one the directory to pack into the filesystem)
+
+Creating cramfs Images
+
+   Creating cramfs images is easier than creating ext3 images and can also
+   be done under Windows (you need [30]cygwin and the cramfsprogs
+   package). On your average Linux distribution you must install the
+   cramfsprogs package.
+     * Debian / Ubuntu # apt-get install cramfsprogs
+     * Gentoo # emerge cramfs
+     * Others: You know it otherwise Google does
+
+   To create the file cool.app.bin containing the contents of the
+   directory /foo/bar/content you just execute the following command and
+   the file is created.
+# mkcramfs /foo/bar/content cool.app.bin
+
