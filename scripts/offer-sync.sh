@@ -52,7 +52,7 @@ while [ true ]; do
 	    echo -n "$b: `date +%X` "
 	    $BC $bcast 3332 $IP
 	    sleep 2
-	    listeners=`wc -w /tmp/listener.replies | awk '{print $1}'`
+	    listeners=`cat /tmp/listener.replies | sort | uniq | wc -w`
 	done
 
 	echo "harvesting replies"
