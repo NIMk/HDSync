@@ -1,0 +1,16 @@
+
+Some of the next steps
+
++ Measure network latency and report it, adjust sync clocks
+
++ Reach frame precise sync, idea:
+  serve the video file through a pipe from a C program
+
++ Modify the skin so that the filebrowser is a black screen
+
++ Modify the skin so that the player GUI is not appearing
+  (can it be done?)
+
++ More documentation
+
++ Binary distribution
