@@ -1,3 +1,9 @@
+03 September 2010 - 0.3 "Heliocentric"
+	Fix to support more than 2 channels
+	User docs: setup manual
+	Developer docs: flowchart diagram
+	Binary compiled distribution (MIPS)
+
 29 June 2010 - 0.2 "Rites"
 
 	Stable setup for early production use
