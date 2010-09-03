@@ -1,0 +1,184 @@
+#+TITLE: HDSync Setup Manual
+#+AUTHOR: Denis J. Roio <jaromil@nimk.nl>
+#+DATE: Version 0.3, September 2010
+
+#+LATEX_CLASS: book-2column
+
+#+LATEX_HEADER: \usepackage[english]{babel}
+#+LATEX_HEADER: \usepackage{amsfonts, amsmath, amssymb}
+#+LATEX_HEADER: \usepackage{ucs}
+#+LATEX_HEADER: \usepackage[utf8x]{inputenc}
+#+LATEX_HEADER: \usepackage[T1]{fontenc}
+#+LATEX_HEADER: \usepackage{hyperref}
+#+LATEX_HEADER: \usepackage[pdftex]{graphicx}
+#+LATEX_HEADER: \usepackage{fullpage}
+#+LATEX_HEADER: \usepackage{lmodern}
+#+LATEX_HEADER: \usepackage[hang,small]{caption}
+#+LATEX_HEADER:
+
+[TABLE-OF-CONTENTS]
+
+* Background information
+
+First of all be sure to read and understand the informations on the
+[[http://www.wdlxtv.com][WDLXTV]] website. To run HDSync you'll need a *WDTV Live* device for
+each video channel you are playing.
+
+[[file:images/wdhdtv-front.jpg]]
+
+Be sure you have the *Live* model: the one with a network port on its
+back (Ethernet RJ45)
+
+[[file:images/wdhdtv-retro.jpg]]
+
+Now, before proceeding with HDSync, download [[http://wiki.wdlxtv.com/Main_Page][B-Rad's firmware WDLXTV
+Live]] and [[http://wiki.wdlxtv.com/Flashing_the_Firmware][flash it]] on your device. Once all this is set you can start
+follow the instructions below.
+
+* Prepare the Usb keys
+
+To run HDSync on your WDTV Live device you need one USB stick for each
+device (and therefore each video channel); the usb stick will contain
+our software and the video to play.
+
+First *format the usb sticks with a decent journaled filesystem like
+the Linux Ext3* using tools like mkfs.ext3 from a GNU/Linux OS.
+
+Then place our application (the *hdsync.app.bin* file) on the USB
+sticks together with two configuration files, one of them needs to be
+edited to set how many video channels you are playing.
+
+ + Copy the *hdsync.app.bin* in the usb stick
+ + Copy the *S00custom-options* conf file in the usb key
+ + Copy the *hdsync.conf* in the usb stick
+ + Edit hdsync.conf according to your setup (set *VIDEO_CHANNELS*)
+ + Create a *videos/* directory in the usb stick, place your video
+
+* Prepare the WDTV devices
+
+To setup the WDTV devices you need to connect them to a monitor or
+project and move around with the remote control, reach the settings
+indicated below and change them with correct values
+
+** Network settings
+ + Set the configuration to *Manual*
+ + Set the ip number of the box to a common C class IPv4[1]
+ + Set the netmask to *255.0.0.0*
+
+** Video settings
+ + Set the *Video sequence* to *Normal*
+ + Set the Browser display to *List mode*
+
+[1] The IP is a numeric network address, a C class is determined by
+    the last value of the series of numbers: be sure that the last and
+    rightmost number changes, while all others stay the same. For
+    further information please refer to common documentation on
+    network administration.
+
+* Connect your syncstarters
+
+HDSync is made so that a complete setup will be extremely simple to
+activate and deactivate: just using an ON/OFF switch, since that is
+what works best when you want to leave your installation somewhere
+like in an art gallery and give simple instructions to people.
+
+Once you loaded the WDTV boxes with the HDSync software and got
+everything configured, you will need to *connect them together via
+ethernet cables* - and a hub if there are more than 2 channels.
+
+Then connect each WDTV box via a video cable (Composite or HDMI) to
+your monitor or beamer, then connect the audio to the amplifier.
+
+Then obviously you need to connect all power cables for all electronic
+device involved in this setup; we use to set everything on the same
+power socket so that its *ON/OFF switch* will be the main for the
+whole installation.
+
+At last, make sure that all cable connections are well plugged and...
+
+* Switch ON!
+
+If everything went well so far you'll see the WDTV boot screens
+popping up, then arriving at the menu they will automatically select
+the video playback browser and stop on its first selection, wait half
+a minute, then start.
+
+In this phase you can notice that network leds are blinking: in case
+you are using an hub you can count as many lights as many devices you
+have (else there is a problem in the way you connected the network).
+
+If you have a computer and want to monitor the sync operation "from
+inside", you can assign yourself an IP in the range of those you used
+for the boxes, then log into the devices via ssh and read their log in
+*/tmp/hdsync.log*, realtime updates can be watches with the command:
+
+: tail -f /tmp/hdsync.log
+
+This way you can also debug the software behaviour for errors; however
+you won't need this unless you are developing HDSync, if you have any
+troubles these are likely due to cables and setup of files on the USB
+sticks. *Happy Hacking*!
+
+* Terms and Conditions
+
+HDSync is Free Software and you can use it, modify it and redistribute
+it as you want, provided you read and agree with all terms of the GNU
+GPL v3 license.
+
+If you use this software for your own art projects, this doesn't mean
+you need to use the same license we use and you can even sell artworks
+made with it; but you must specify reasonably that you are using:
+
+ *HDSync, free and open source software developed by Jaromil at the
+ Netherlands Media Art Institute*.
+
+* Support
+
+If you rely on this software and you wish we develop it further,
+please express your appreciation with a kind donation.
+
+If you need support using HDSync, distributing artworks or producing
+installations with it, you can certainly *hire our services*: we can
+offer assistance and development services as a professional art
+institute with several years of experience in the fields of video and
+media art.
+
+Get in touch:
+
+:   Denis Jaromil Roio   |X|  Dyne.org Foundation
+:   software developer   |X|  Netherlands Media Art Institute
+:   GNU / Linux / *BSD   |X|  Montevideo / Time Based Arts
+: ------------------------------------------------------------
+:  http://nimk.nl/onderzoek ~ ~ ~ http://nimk.nl/eng/research
+:  Tel: +31 20 6237101 121 ( Tue and Fri, 10:30 - 17:30 CET )
+:  Post:  NIMK/Artlab   Keizersgracht 264   1016 EV AMSTERDAM
+:  Email: jaromil@nimk.org IRC: irc.freenode.net /msg jaromil
+:  PGP: B2D9 9376 BFB2 60B7 601F 5B62 F6D3 FBD9 [ C2B6 8E39 ]
+: 
+
+
+* Disclaimer
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+: 
+: 
+: HDSync is brought to you by: 
+: 
+
+[[file:images/nimk-logo-eng.jpg]]
+
+:         & 
+
+[[file:images/dyne-big.png]]
