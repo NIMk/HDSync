@@ -48,7 +48,7 @@ if [ -z $1 ]; then
     
     sudo chown -R root:root $appdir
     
-    dd if=/dev/zero of=$imagefile bs=1K count=500 &&
+    dd if=/dev/zero of=$imagefile bs=1K count=88 &&
     /sbin/mkfs.ext3 -F $imagefile &&
     /sbin/tune2fs -c 0 -i 0 $imagefile &&
     mkdir -p $loopdir &&

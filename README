@@ -17,9 +17,9 @@
 :                                    by Denis Roio aka Jaromil
 :      http://nimk.nl/syncstarter
 
-The digital video syncstarter software is developed and employed by
-NIMk to provide synced playback of multiple videos on multiple
-screens.
+The digital video syncstarter software is developed and employed at
+the NIMk Artlab to provide synced playback of multiple videos on
+multiple screens.
 
 In the video art field there are many artworks requiring the real-time
 synced playback of audio/video: HDSync provides such a functionality
@@ -33,19 +33,23 @@ More information on our R&D deparment: http://nimk.nl/eng/research
 
 ** Usage and compatibility
 
-This package won't be very useful unless you know how to reuse the
-code or cross-compile it for Mips processors.  HDSync is been
-developed in-house at NIMk on a specific hardware configuration (WD HD
-Live) and runds on the WDLXTV firmware by B-rad.
-
+HDSync only works on a specific hardware configuration: WD HD Live
+players running B-Rad's WDLXTV firmware, something artists themselves
+can afford for approx 100EUR on the consumer market.
 
 ** Development in progress
 
-This release can synchronise the playback of multiple devices on the
-same LAN: they can automatically handshake and start playing in sync,
-restoring the sync at every loop. Empirical tests have shown that sync
-will keep below 1 sec. difference, but we still didn't achieve frame
-exact sync.
+This release can synchronise the playback of multiple channels
+(virtually unlimited) on the same local network: hdsync can
+automatically handshake and start playing in sync, restoring the sync
+at every loop. Empirical tests show an error margin of 10-15 frames,
+with further development we aim to achieve frame exact sync.
+
+** Documentation
+
+A user manual is online at ftp://ftp.dyne.org/hdsync/hdsync_manual.pdf
+
+More documentation is included inside the doc/ directory
 
 ** Support and warranty
 
