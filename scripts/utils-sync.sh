@@ -17,16 +17,19 @@
 
 # here below only auxiliary functions
 
+get_conf() {
+    grep "^$1" /conf/config |  perl -F\' -anale 'print $F[1]'
+}
+
 get_ip() {
-    echo "checking for a network address"
+    echo "getting a network address"
     IFACE=$1
-    IP="`ifconfig $IFACE | grep 'inet addr'| awk '{print $2}'|cut -f2 -d:`"
-    # make sure dhcp has assigned an address, else wait and retry
-    while [ "$IP" = "" ]; do
-	IP="`ifconfig $IFACE | grep 'inet addr'| awk '{print $2}'|cut -f2 -d:`"
-	sleep 1
-    done
-    echo "listening on $IFACE configured with address $IP ..." 
+    IP="192.168.0.$HDSYNC_CHANNEL"
+    config_tool -c LAN_TYPE=s
+    config_tool -c IP2=$IP
+    config_tool -c NETMASK2=255.0.0.0
+    ifconfig $IFACE $IP netmask 255.0.0.0
+    echo "network interface $IFACE configured with address $IP ..." 
     export IP
 }
 

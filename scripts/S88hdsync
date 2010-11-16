@@ -37,7 +37,8 @@ export APPROOT
 export SYNC_LOG
 export OFFER_SLEEP
 export ETH_IFACE
-export VIDEO_CHANNELS
+export HDSYNC_CHANNEL
+export TOTAL_CHANNELS
 
 # load up utils
 . /apps/hdsync/bin/utils-sync.sh

@@ -40,7 +40,6 @@ if [ -z $1 ]; then
     
     cp -v src/netcat $appdir/bin &&
     cp -v src/broadcaster $appdir/bin &&
-    strip $appdir/bin/* &&
     cp -v scripts/*-sync.sh $appdir/bin &&
     cp -v scripts/S88hdsync $appdir/etc/init.d &&
     chmod a+x $appdir/etc/init.d/S88hdsync &&
@@ -48,7 +47,7 @@ if [ -z $1 ]; then
     
     sudo chown -R root:root $appdir
     
-    dd if=/dev/zero of=$imagefile bs=1K count=88 &&
+    dd if=/dev/zero of=$imagefile bs=1K count=256 &&
     /sbin/mkfs.ext3 -F $imagefile &&
     /sbin/tune2fs -c 0 -i 0 $imagefile &&
     mkdir -p $loopdir &&

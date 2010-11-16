@@ -47,7 +47,7 @@ while [ true ]; do
 
         # send broadcast signals until somebody listens
 	listeners=0
-	expected=`expr $VIDEO_CHANNELS - 1`
+	expected=`expr $TOTAL_CHANNELS - 1`
 	while [ "$listeners" != "$expected" ]; do
 	    echo -n "$b: `date +%X` "
 	    $BC $bcast 3332 $IP
