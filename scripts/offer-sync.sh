@@ -79,8 +79,6 @@ while [ true ]; do
 
         # "press play on tape"
 	echo "p" > /tmp/ir_injection; sleep 0.1
-        # take off OSD
-	echo "n" > /tmp/ir_injection
 
 	echo "sync playback started"
 

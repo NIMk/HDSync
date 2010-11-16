@@ -22,6 +22,12 @@ APPROOT=/apps/hdsync
 
 USBROOT=`mount | awk '/.tmp.mnt/ { print $3}'`
 
+# if there is a custom osd, we have to wait longer
+ls $USBROOT/ | grep 'osd.bin$'
+if [ $? = 0 ]; then
+    sleep 15
+fi
+
 if ! [ -r $USBROOT/hdsync.conf ]; then
     echo "config file not found" > /tmp/hdsync.log
     echo "place hdsync.conf in your usb key" >> /tmp/hdsync.log
@@ -47,7 +53,7 @@ if ! [ -z "x$VIDEO_OUT" ]; then
     switch_output $VIDEO_OUT
 fi
 
-if [ "x$SYNC_ROLE" = "xoffer" ]; then
+if [ "$HDSYNC_CHANNEL" = "1" ]; then
     $APPROOT/bin/offer-sync.sh >> $SYNC_LOG
 else
     $APPROOT/bin/listen-sync.sh >> $SYNC_LOG

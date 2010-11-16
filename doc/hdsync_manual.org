@@ -1,6 +1,8 @@
 #+TITLE: HDSync Setup Manual
 #+AUTHOR: Denis J. Roio <jaromil@nimk.nl>
-#+DATE: Version 0.3, September 2010
+#+DATE: Version 0.4, November 2010
+
+#+OPTIONS ^:nil
 
 #+LATEX_CLASS: book-2column
 
@@ -41,18 +43,25 @@ To run HDSync on your WDTV Live device you need one USB stick for each
 device (and therefore each video channel); the usb stick will contain
 our software and the video to play.
 
-First *format the usb sticks with a decent journaled filesystem like
-the Linux Ext3* using tools like mkfs.ext3 from a GNU/Linux OS.
+First *format the usb sticks with a journaled filesystem like the
+Linux Ext3* using tools like mkfs.ext3 from a GNU/Linux OS.
 
 Then place our application (the *hdsync.app.bin* file) on the USB
 sticks together with two configuration files, one of them needs to be
 edited to set how many video channels you are playing.
 
- + Copy the *hdsync.app.bin* in the usb stick
- + Copy the *S00custom-options* conf file in the usb key
- + Copy the *hdsync.conf* in the usb stick
- + Edit hdsync.conf according to your setup (set *VIDEO_CHANNELS*)
- + Create a *videos/* directory in the usb stick, place your video
+ + Copy the file *Invisible.osd.bin* in the usb stick
+ + Copy the file *hdsync.app.bin* in the usb stick
+ + Copy the file *S00custom-options* in the usb key
+ + Copy the file *hdsync.conf* in the usb stick
+ + Edit hdsync.conf according to your setup (set *TOTAL_CHANNELS* and *HDSYNC_CHANNEL*)
+ + Create a *videos/* directory in the usb stick, place your videos
+
+The most important setting is *HDSYNC_CHANNEL* which should simply be
+progressive number for each device, starting from 1: it will be
+smaller or equal than *TOTAL_CHANNELS* and, in case of 1, it indicates
+that the device is the *server* providing the main sync signal to
+other clients.
 
 * Prepare the WDTV devices
 
@@ -60,20 +69,9 @@ To setup the WDTV devices you need to connect them to a monitor or
 project and move around with the remote control, reach the settings
 indicated below and change them with correct values
 
-** Network settings
- + Set the configuration to *Manual*
- + Set the ip number of the box to a common C class IPv4[1]
- + Set the netmask to *255.0.0.0*
-
 ** Video settings
  + Set the *Video sequence* to *Normal*
  + Set the Browser display to *List mode*
-
-[1] The IP is a numeric network address, a C class is determined by
-    the last value of the series of numbers: be sure that the last and
-    rightmost number changes, while all others stay the same. For
-    further information please refer to common documentation on
-    network administration.
 
 * Connect your syncstarters
 
@@ -107,17 +105,23 @@ In this phase you can notice that network leds are blinking: in case
 you are using an hub you can count as many lights as many devices you
 have (else there is a problem in the way you connected the network).
 
-If you have a computer and want to monitor the sync operation "from
-inside", you can assign yourself an IP in the range of those you used
-for the boxes, then log into the devices via ssh and read their log in
+Finally, if for some reason you don't remember the password to access
+your WD devices, you can reset it using the *wdtvhack.app.bin*
+application we provide from our repository: use it on a separate usb
+stick and boot with it once, the root password will be reset to
+*hackme*.
+
+Then if you want to monitor the sync operation "from inside", you can
+assign yourself an IP in the range of those you used for the boxes,
+then log into the devices via ssh and read their log in
 */tmp/hdsync.log*, realtime updates can be watches with the command:
 
 : tail -f /tmp/hdsync.log
 
 This way you can also debug the software behaviour for errors; however
-you won't need this unless you are developing HDSync, if you have any
-troubles these are likely due to cables and setup of files on the USB
-sticks. *Happy Hacking*!
+you won't need this unless you are debugging HDSync. At last, if you
+have any troubles these are likely due to cables and setup of files on
+the USB sticks. *Happy Hacking*!
 
 * Terms and Conditions
 
@@ -134,8 +138,8 @@ made with it; but you must specify reasonably that you are using:
 
 * Support
 
-If you rely on this software and you wish we develop it further,
-please express your appreciation with a kind donation.
+If you rely on this software and you wish we develop it further, you
+are welcome to express your appreciation :)
 
 If you need support using HDSync, distributing artworks or producing
 installations with it, you can certainly *hire our services*: we can
