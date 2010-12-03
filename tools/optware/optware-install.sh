@@ -45,9 +45,18 @@ fi
 
 . /tmp/optware.env
 
+ping -c 1 ipkg.nslu2-linux.org > /dev/null
+if [ $? != 0 ]; then
+    echo "Your WDTV device is not connected to the Internet:"
+    echo "the online repository ipkg.nslu2-linux.org is not reachable."
+    echo "Optware installation requires connecting to it."
+    exit 1
+fi
+
 if [ -r $OPTWARE_ROOT/etc/ipkg.conf ]; then
     echo "Optware already installed on $OPTWARE_ROOT"
     echo "to force activation, run optware-mount.sh"
+    echo "to re-install first delete /opt from USB"
     exit 1
 else
     mkdir -p $USBROOT/opt
@@ -64,11 +73,13 @@ export LD_LIBRARY_PATH=/opt/lib:/opt/usr/lib
 
 /opt/bin/ipkg update 
 /opt/bin/ipkg -force-reinstall install uclibc-opt
-/opt/bin/ipkg -force-reinstall install ipkg-opt
+/opt/bin/ipkg -force-reinstall -force-defaults install ipkg-opt
 
 optware-mount.sh
 
 optware-binwrap.sh
+
+. /etc/profile
 
 echo "Installation succesfull!"
 echo "type 'ipkg list' for a list of software now available for install"

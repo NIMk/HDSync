@@ -19,8 +19,8 @@ if [ $? != 0 ]; then
     cp /etc/profile /tmp/profile
     cat /tmp/optware.env >> /tmp/profile
     cat <<EOF >> /tmp/profile
-export PATH=/apps/wdlxtv_optware/bin:/opt/bin:/opt/sbin:/opt/usr/bin:/opt/usr/sbin:/bin:/sbin:/usr/bin:/usr/sbin
-export LD_LIBRARY_PATH=/opt/lib:/opt/usr/lib:/lib:/usr/lib
+export PATH=/apps/wdlxtv_optware/bin:/opt/bin:/opt/sbin:/opt/wrappers:/bin:/sbin:/usr/bin:/usr/sbin
+export LD_LIBRARY_PATH=/opt/lib:/lib:/usr/lib
 EOF
     mount -o bind /tmp/profile /etc/profile
 

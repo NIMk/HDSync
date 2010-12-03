@@ -11,16 +11,18 @@
 
 . /tmp/optware.env
 
+rm -rf $USBROOT/opt/wrappers
+mkdir $USBROOT/opt/wrappers
+
 wrap_bins() {
     echo -n "building binary wrappers for $1 "
     for x in `ls $1 | grep -v '.sh$'`; do
-	rm -f $USBROOT/opt/bin/$x
-	cat <<EOF > $USBROOT/opt/bin/$x
+	cat <<EOF > $USBROOT/opt/wrappers/$x
 #!/bin/sh
 LD_LIBRARY_PATH=/lib:/usr/lib
 $1/$x \$@
 EOF
-	chmod +x $USBROOT/opt/bin/$x
+	chmod +x $USBROOT/opt/wrappers/$x
 	echo -n .
     done
     echo
