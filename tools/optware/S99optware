@@ -1,0 +1,29 @@
+# OptWare for WDLXTV startup script
+# (C) 2010 Denis Roio <jaromil@dyne.org>
+# GNU GPL v3
+
+# let's first wait for the boot to complete
+sleep 15
+
+APPROOT=/apps/wdlxtv_optware
+
+USBROOT=`mount | awk '/.tmp.mnt/ { print $3}'`
+USBID=`mount | awk '/.tmp.mnt/ { print $3}' | cut -d/ -f4`
+
+touch /tmp/optware.log
+
+# update the optware env
+cat <<EOF > /tmp/optware.env
+export USBROOT=$USBROOT
+export OPTWARE_ROOT="$USBROOT/opt"
+EOF
+   
+if ! [ -r $USBROOT/opt/etc/ipkg.conf ]; then
+    echo "no optware installation found on this usb key" >> /tmp/optware.log
+    echo "run optware-install.sh to install" >> /tmp/optware.log
+    exit 0
+fi
+
+echo "optware installation found on this usb key" >> /tmp/optware.log
+
+$APPROOT/bin/optware-mount.sh

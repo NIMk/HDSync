@@ -1,0 +1,14 @@
+
+To install optware run:
+# optware-install.sh
+
+For more information on Optware and all the software it provides:
+see http://www.nslu2-linux.org/wiki/Optware/HomePage
+
+This optware port is made for
+ the WDLXTV firmware running on WDTV HD Live hardware
+
+OptWare scripts for WDLXTV are Copyleft
+ (C) 2010 Denis Roio <jaromil@dyne.org>
+ Licensed as GNU GPL v3
+

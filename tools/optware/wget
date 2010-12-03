@@ -1,0 +1,5 @@
+#!/bin/sh
+# simple wrapper for wget
+LD_LIBRARY_PATH=/lib:/usr/lib
+/bin/wget $@
+
