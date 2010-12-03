@@ -67,3 +67,13 @@ export LD_LIBRARY_PATH=/opt/lib:/opt/usr/lib
 /opt/bin/ipkg -force-reinstall install ipkg-opt
 
 optware-mount.sh
+
+optware-binwrap.sh
+
+echo "Installation succesfull!"
+echo "type 'ipkg list' for a list of software now available for install"
+echo "send your feedback on the WDLXTV forum"
+echo " http://forum.wdlxtv.com/viewtopic.php?f=40&t=2637"
+echo "enjoy, may the source be with you! :^)"
+
+

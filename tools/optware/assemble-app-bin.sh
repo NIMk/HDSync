@@ -37,9 +37,7 @@ mkdir -p $appdir
 mkdir -p $appdir/bin
 mkdir -p $appdir/etc/init.d
 
-cp -v optware-install.sh $appdir/bin &&
-cp -v optware-mount.sh $appdir/bin &&
-cp -v wget $appdir/bin &&
+cp -v optware-*.sh $appdir/bin &&
 cp -v ipkg.conf $appdir/etc &&
 cp -v S99optware $appdir/etc/init.d &&
 chmod a+x $appdir/etc/init.d/S99optware &&
