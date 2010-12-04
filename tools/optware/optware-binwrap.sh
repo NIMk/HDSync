@@ -16,7 +16,7 @@ mkdir $USBROOT/opt/wrappers
 
 wrap_bins() {
     echo -n "building binary wrappers for $1 "
-    for x in `ls $1 | grep -v '.sh$'`; do
+    for x in `ls $1 | grep -v '\.sh$'`; do
 	cat <<EOF > $USBROOT/opt/wrappers/$x
 #!/bin/sh
 LD_LIBRARY_PATH=/lib:/usr/lib
