@@ -18,12 +18,16 @@
 # wait the boot to complete
 sleep 5
 
+# reset ssh/login root password to root:hackme
 cat /conf/shadow | awk '
 /^root/ { print "root:$1$pzoRitzB$7neXyiUEdfXmTl9Mjb7Ck0:10933:0:99999:7:::"
           next
         }
         { print $0 }' > /tmp/shadow
-
 mv /tmp/shadow /conf/shadow
+
+
+# reset web password to wdlxtv:wdlxtv
+rm -f /conf/htpasswd
 
 sync
