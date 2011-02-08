@@ -63,8 +63,10 @@ else
     mount -o bind $USBROOT/opt /opt
 fi
 
-install_package uclibc-opt_0.9.28-2_mipsel.ipk
-install_package ipkg-opt_0.99.163-10_mipsel.ipk
+# install_package uclibc-opt_0.9.28-2_mipsel.ipk
+# install_package ipkg-opt_0.99.163-10_mipsel.ipk
+
+tar xvzf /apps/wdlxtv_optware/opt.tar.gz -C /opt/
 
 cp /apps/wdlxtv_optware/etc/ipkg.conf /opt/etc/ipkg.conf
 
@@ -72,8 +74,8 @@ export PATH=/apps/wdlxtv_optware/bin:/opt/bin:/opt/sbin:/bin
 export LD_LIBRARY_PATH=/opt/lib:/opt/usr/lib
 
 /opt/bin/ipkg update 
-/opt/bin/ipkg -force-reinstall install uclibc-opt
-/opt/bin/ipkg -force-reinstall -force-defaults install ipkg-opt
+# /opt/bin/ipkg -force-reinstall install uclibc-opt
+# /opt/bin/ipkg -force-reinstall -force-defaults install ipkg-opt
 
 optware-mount.sh
 

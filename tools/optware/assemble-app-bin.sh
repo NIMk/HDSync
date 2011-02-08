@@ -41,12 +41,13 @@ cp -v optware-*.sh $appdir/bin &&
 cp -v wget $appdir/bin &&
 cp -v ipkg.conf $appdir/etc &&
 cp -v S99optware $appdir/etc/init.d &&
+cp -v opt.tar.gz $appdir
 chmod a+x $appdir/etc/init.d/S99optware &&
 cp -v README $appdir &&
 
 sudo chown -R root:root $appdir
 
-dd if=/dev/zero of=$imagefile bs=1K count=256 &&
+dd if=/dev/zero of=$imagefile bs=1K count=1024 &&
 /sbin/mkfs.ext3 -F $imagefile &&
 /sbin/tune2fs -c 0 -i 0 $imagefile &&
 mkdir -p $loopdir &&
