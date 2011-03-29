@@ -22,35 +22,54 @@ get_conf() {
 }
 
 get_ip() {
-    echo "getting a network address"
-    IFACE=$1
-    IP="192.168.0.$HDSYNC_CHANNEL"
-    config_tool -c LAN_TYPE=s
-    config_tool -c IP2=$IP
-    config_tool -c NETMASK2=255.0.0.0
-    ifconfig $IFACE $IP netmask 255.0.0.0
-    echo "network interface $IFACE configured with address $IP ..." 
+    if [ "$HDSYNC_NETWORK" = "DYNAMIC" ]; then
+	echo "listening for DHCP assigned IP on the network"
+	config_tool -c LAN_TYPE='d'
+	IP=`get_conf IP2`
+    else
+	echo "setting a static network address"
+	IP="192.168.0.$HDSYNC_CHANNEL"
+	config_tool -c LAN_TYPE='s'
+	config_tool -c IP2=$IP
+	config_tool -c NETMASK2=255.255.255.0
+	ifconfig eth0 $IP netmask 255.255.255.0
+	echo "network interface configured with address $IP ..." 
+    fi
     export IP
 }
 
-get_netcat() {
+get_bins() {
+    # wrapper to test in development on local paths
     if [ -z $1 ]; then
 	NC="../src/netcat"
 	BC="../src/broadcaster"
+	UP="../scripts/upnp.sh"
     else
 	NC="$APPROOT/bin/netcat"
 	BC="$APPROOT/bin/broadcaster"
+	UP="$APPROOT/bin/upnp.sh"
     fi
     echo "netcat binaries found:"
     echo "$BC"
     echo "$NC"
-    export BC NC
+    echo "$UP"
+    export BC NC UP
 }
 
 prepare_play() {
-    file=`ls $USBROOT/sync`
-    upnp.sh load "$USBROOT/sync/$file"
-    upnp.sh play
-    upnp.sh pause
+    # turn off screensaver
+    config_tool -c DMA_ENABLE_SCREENSAVER='0'
+    config_tool -c DMA_SCREENSAVER='0'
+
+    # go to the video from the initial menu position
+    echo "r" > /tmp/ir_injection; sleep 1
+    echo "r" > /tmp/ir_injection; sleep 1
+    echo "r" > /tmp/ir_injection; sleep 2
+    echo "p" > /tmp/ir_injection; sleep 10
+#    file=`ls $USBROOT/sync`
+#    $UP load "$USBROOT/sync/$file"
+    echo "T" > /tmp/ir_injection; sleep 5
+    $UP play
+    $UP pause
 }
 

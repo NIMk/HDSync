@@ -19,59 +19,45 @@ PATH=/usr/bin:/bin:/usr/sbin:/sbin
 
 . /apps/hdsync/bin/utils-sync.sh
 
-get_ip $ETH_IFACE
-
-get_netcat $APPROOT
 
 # launch background listener for acks
+rm -f /tmp/offer.replies
+touch /tmp/offer.replies
 (while [ true ]; do
     answer=`echo | $NC -c -u -l -p 3333`;
     echo $answer >> /tmp/offer.replies
     done) &
 
-# will get ready for play button
-prepare_play
+echo "listening for offers on $IP"
 
-# loop continuously
-while [ true ]; do
-    sleep 3
-    lsof | grep videos > /dev/null
-    if [ $? == 1 ]; then
+offer="`echo | $NC -c -u -l -p 3332`"
 
-	rm -f /tmp/offer.replies
-	touch /tmp/offer.replies
-
-	echo "listening for offers"
-
-	offer="`echo | $NC -c -u -l -p 3332`"
-
-	echo "offered sync by $offer"
+echo "offered sync by $offer"
 
 
         # repeat udp replies to offer until ack
-	echo "replying with our ip until ack"
-	ack=""
-	while [ "$ack" = "" ]; do
-	    sleep 1
-	    echo "$IP" | $NC -c -u $offer 3331
-	    echo -n "."
-	    ack=`cat /tmp/offer.replies`
-	done
-	
-	echo "ack received, we are channel $ack"
-
-	sync
- 
-	echo "ready: awaiting syncstarter signal"
-
-
-        # exit after connection (-e true)
-	$NC -c -u -l -p 3336 -e true
-	
-        # "press play on tape"
-	upnp.sh play
-
-	echo "sync playback started"
-    fi
+echo "replying with our ip until ack"
+ack=""
+while [ "$ack" = "" ]; do
+    sleep 1
+    echo "$IP" | $NC -c -u $offer 3331
+    echo -n "."
+    ack=`cat /tmp/offer.replies`
 done
+
+echo "ack received, we are channel $ack"
+
+sync
+
+echo "ready: awaiting syncstarter signal"
+
+
+# exit after connection (-e true)
+$NC -c -u -l -p 3336 -e true
+
+# "press play on tape"
+$UP play
+
+echo "sync playback started"
+
 

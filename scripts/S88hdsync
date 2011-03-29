@@ -38,27 +38,32 @@ if ! [ -r $USBROOT/hdsync.conf ]; then
 else
 # source settings
     . $USBROOT/hdsync.conf
-    echo "config file found in $USBROOT/hdsync.conf" > $SYNC_LOG
-    echo "sync role configured to: $SYNC_ROLE" >> $SYNC_LOG
+    echo "config file found in ${USBROOT}hdsync.conf" >> /tmp/hdsync.log
 fi
 
 export USBROOT
 export APPROOT
-export SYNC_LOG
-export OFFER_SLEEP
-export ETH_IFACE
+export HDSYNC_NETWORK
 export HDSYNC_CHANNEL
 export TOTAL_CHANNELS
 
 # load up utils
-. /apps/hdsync/bin/utils-sync.sh
+. $APPROOT/bin/utils-sync.sh
 
-if ! [ -z "x$VIDEO_OUT" ]; then
-    switch_output $VIDEO_OUT
-fi
+# retrieve network details
+get_ip
+
+# retrieve application details
+get_bins $APPROOT
+
+# wait that the usb is mounted
+sleep 10
+
+# will get ready for play button
+prepare_play
 
 if [ "$HDSYNC_CHANNEL" = "1" ]; then
-    $APPROOT/bin/offer-sync.sh >> $SYNC_LOG
+    $APPROOT/bin/offer-sync.sh >> /tmp/hdsync.log
 else
-    $APPROOT/bin/listen-sync.sh >> $SYNC_LOG
+    $APPROOT/bin/listen-sync.sh >> /tmp/hdsync.log
 fi

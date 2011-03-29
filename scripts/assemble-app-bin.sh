@@ -56,6 +56,7 @@ if [ -z $1 ]; then
     cp -a $appdir/* $loopdir/ &&
     sudo rm -rf $loopdir/lost+found &&
     sudo chown root:root -R $loopdir &&
+    sleep 1 &&
     sudo umount $loopdir &&
     sudo rm -rf $loopdir $appdir && 
     sudo /sbin/fsck.ext3 $imagefile
