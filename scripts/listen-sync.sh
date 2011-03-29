@@ -69,7 +69,7 @@ while [ true ]; do
 	$NC -c -u -l -p 3336 -e true
 	
         # "press play on tape"
-	echo "p" > /tmp/ir_injection; sleep 0.1
+	upnp.sh play
 
 	echo "sync playback started"
     fi

@@ -48,51 +48,9 @@ get_netcat() {
 }
 
 prepare_play() {
-# poor man's syncstarting:
-# we emulate remote control commands
-#
-# we could do much better if this damn Sigma SDK would be open
-# but so far, so good.
-    
-    # go to the video from the initial menu position
-    echo "r" > /tmp/ir_injection; sleep 1
-    echo "r" > /tmp/ir_injection; sleep 1
-    echo "r" > /tmp/ir_injection; sleep 2
+    file=`ls $USBROOT/sync`
+    upnp.sh load "$USBROOT/sync/$file"
+    upnp.sh play
+    upnp.sh pause
 }
 
-switch_output() {
-
-    type=$1
-    case $type in
-	hdmi)
-	    echo "u" > /tmp/ir_injection; sleep 0.5
-	    echo "r" > /tmp/ir_injection; sleep 0.5
-	    echo "r" > /tmp/ir_injection; sleep 0.5
-	    echo "n" > /tmp/ir_injection; sleep 0.5
-	    echo "d" > /tmp/ir_injection; sleep 0.5
-	    echo "d" > /tmp/ir_injection; sleep 0.5
-	    # set HDMI res and color to auto
-	    echo "n" > /tmp/ir_injection; sleep 0.5
-	    echo "n" > /tmp/ir_injection; sleep 0.5
-	    echo "n" > /tmp/ir_injection;
-	    sleep 2 # wait change and confirm selection
-	    echo "r" > /tmp/ir_injection; sleep 0.5
-	    echo "n" > /tmp/ir_injection;
-	    echo "video output switched to HDMI"
-	    ;;
-
-	composite)
-	    echo "u" > /tmp/ir_injection; sleep 0.5
-	    echo "r" > /tmp/ir_injection; sleep 0.5
-	    echo "r" > /tmp/ir_injection; sleep 0.5
-	    echo "n" > /tmp/ir_injection; sleep 0.5
-	    # select composite default (PAL)
-	    echo "n" > /tmp/ir_injection; sleep 0.5
-	    echo "n" > /tmp/ir_injection; sleep 0.5
-	    echo "video output switched to HDMI"
-	    ;;
-
-	*)
-	    echo "output selected not recognized: $type"
-    esac
-}

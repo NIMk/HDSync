@@ -20,7 +20,10 @@ sleep 15
 
 APPROOT=/apps/hdsync
 
-USBROOT=`mount | awk '/.tmp.mnt/ { print $3}'`
+# USBROOT=`mount | awk '/.tmp.mnt/ { print $3}'`
+USBROOT=`cat /tmp/appsRoot | grep hdsync | sed 's/hdsync//`
+echo "HDSync app running on USB $USBROOT" > /tmp/hdsync.log
+date >> /tmp/hdsync.log
 
 # if there is a custom osd, we have to wait longer
 ls $USBROOT/ | grep 'osd.bin$'
@@ -29,7 +32,7 @@ if [ $? = 0 ]; then
 fi
 
 if ! [ -r $USBROOT/hdsync.conf ]; then
-    echo "config file not found" > /tmp/hdsync.log
+    echo "config file not found" >> /tmp/hdsync.log
     echo "place hdsync.conf in your usb key" >> /tmp/hdsync.log
     exit 0
 else
@@ -39,6 +42,7 @@ else
     echo "sync role configured to: $SYNC_ROLE" >> $SYNC_LOG
 fi
 
+export USBROOT
 export APPROOT
 export SYNC_LOG
 export OFFER_SLEEP

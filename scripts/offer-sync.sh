@@ -75,10 +75,10 @@ while [ true ]; do
 	$BC $bcast 3336 s
 
 	# configurable wait step
-	sleep $OFFER_SLEEP
+#	sleep $OFFER_SLEEP
 
         # "press play on tape"
-	echo "p" > /tmp/ir_injection; sleep 0.1
+	upnp.sh play
 
 	echo "sync playback started"
 
