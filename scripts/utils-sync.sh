@@ -38,6 +38,7 @@ get_ip() {
     export IP
 }
 
+
 get_bins() {
     # wrapper to test in development on local paths
     if [ -z $1 ]; then
@@ -49,7 +50,7 @@ get_bins() {
 	BC="$APPROOT/bin/broadcaster"
 	UP="$APPROOT/bin/upnp.sh"
     fi
-    echo "netcat binaries found:"
+    echo "hdsync binaries found:"
     echo "$BC"
     echo "$NC"
     echo "$UP"
@@ -61,15 +62,30 @@ prepare_play() {
     config_tool -c DMA_ENABLE_SCREENSAVER='0'
     config_tool -c DMA_SCREENSAVER='0'
 
-    # go to the video from the initial menu position
-    echo "r" > /tmp/ir_injection; sleep 1
-    echo "r" > /tmp/ir_injection; sleep 1
-    echo "r" > /tmp/ir_injection; sleep 2
-    echo "p" > /tmp/ir_injection; sleep 10
-#    file=`ls $USBROOT/sync`
-#    $UP load "$USBROOT/sync/$file"
-    echo "T" > /tmp/ir_injection; sleep 5
-    $UP play
-    $UP pause
-}
+    file=`ls $USBROOT/sync`
+    state=`upnp-cmd GetTransportInfo | awk '/^.CurrentTransportState/ { print $3 }'`
+    $UP load "$USBROOT/sync/$file"
+    while [ "$state" = "NO_MEDIA_PRESENT" ]; do
+	state=`upnp-cmd GetTransportInfo | awk '/^.CurrentTransportState/ { print $3 }'`
+    done
 
+    sync
+
+    $UP play
+    state=`upnp-cmd GetTransportInfo | awk '/^.CurrentTransportState/ { print $3 }'`
+    while [ "$state" = "TRANSITIONING" ]; do
+	state=`upnp-cmd GetTransportInfo | awk '/^.CurrentTransportState/ { print $3 }'`
+    done
+
+    sync
+
+    $UP pause
+    state=`upnp-cmd GetTransportInfo | awk '/^.CurrentTransportStatus/ { print $3 }'`
+    while [ "$state" = "PREBUFFING" ]; do
+	state=`upnp-cmd GetTransportInfo | awk '/^.CurrentTransportStatus/ { print $3 }'`
+    done
+
+    sync
+
+    echo "ready to play on `date +%T`"
+}

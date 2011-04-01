@@ -21,11 +21,11 @@ PATH=/usr/bin:/bin:/usr/sbin:/sbin
 
 
 # launch background listener for acks
-rm -f /tmp/offer.replies
-touch /tmp/offer.replies
-(while [ true ]; do
+rm -f /tmp/hdsync.reply
+touch /tmp/hdsync.reply
+(while [ -r /tmp/hdsync.reply ]; do
     answer=`echo | $NC -c -u -l -p 3333`;
-    echo $answer >> /tmp/offer.replies
+    echo $answer >> /tmp/hdsync.reply
     done) &
 
 echo "listening for offers on $IP"
@@ -42,7 +42,7 @@ while [ "$ack" = "" ]; do
     sleep 1
     echo "$IP" | $NC -c -u $offer 3331
     echo -n "."
-    ack=`cat /tmp/offer.replies`
+    ack=`cat /tmp/hdsync.reply`
 done
 
 echo "ack received, we are channel $ack"
@@ -55,9 +55,10 @@ echo "ready: awaiting syncstarter signal"
 # exit after connection (-e true)
 $NC -c -u -l -p 3336 -e true
 
+
 # "press play on tape"
 $UP play
 
-echo "sync playback started"
+echo "sync playback started on `date +%T`"
 
 

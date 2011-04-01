@@ -20,11 +20,11 @@ PATH=/usr/bin:/bin:/usr/sbin:/sbin
 . $APPROOT/bin/utils-sync.sh
 
 # launch background listener
-rm -f /tmp/offer.replies
-touch /tmp/offer.replies
+rm -f /tmp/hdsync.reply
+touch /tmp/hdsync.reply
 (while [ true ]; do
     answer=`echo | $NC -c -u -l -p 3331`;
-    echo $answer >> /tmp/listener.replies
+    echo $answer >> /tmp/hdsync.reply
     done) &
 
 echo "broadcasting offer signals from $IP"
@@ -40,36 +40,29 @@ while [ "$listeners" != "$expected" ]; do
     echo -n "$b: `date +%X` "
     $BC $bcast 3332 $IP
     sleep 2
-    listeners=`cat /tmp/listener.replies | sort | uniq | wc -w`
+    listeners=`cat /tmp/hdsync.reply | sort | uniq | wc -w`
 done
 
 echo "harvesting replies"
-cat /tmp/listener.replies | sort | uniq > /tmp/listeners
+cat /tmp/hdsync.reply | sort | uniq > /tmp/hdsync.listeners
 
 echo "sending acks"
 c=1
-for l in `cat /tmp/listeners`; do
+for l in `cat /tmp/hdsync.listeners`; do
     echo "$c: $l"
     echo "$c" | $NC -c -u $l 3333
 done
 
 
 echo "waiting for other players to get ready..."
-sleep 15
+sleep 10
 
 sync
 
 # sync start!
 $BC $bcast 3336 s
 
-	# configurable wait step
-#	sleep $OFFER_SLEEP
-
-        # "press play on tape"
+# "press play on tape"
 $UP play
 
-echo "sync playback started"
-
-
-
-
+echo "sync playback started on `date +%T`"

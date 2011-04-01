@@ -16,14 +16,24 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # wait the boot to complete
+
+if [ "$1" = "stop" ]; then
+    upnp.sh stop
+    rm -f /tmp/hdsync.reply
+    umount /apps/hdsync
+    exit 0
+fi
+
 sleep 15
 
 APPROOT=/apps/hdsync
 
+touch /tmp/hdsync.log
 # USBROOT=`mount | awk '/.tmp.mnt/ { print $3}'`
 USBROOT=`cat /tmp/appsRoot | grep hdsync | sed 's/hdsync//`
-echo "HDSync app running on USB $USBROOT" > /tmp/hdsync.log
+echo "HDSync app running on USB $USBROOT" >> /tmp/hdsync.log
 date >> /tmp/hdsync.log
+echo "args: $@" >> /tmp/hdsync.log
 
 # if there is a custom osd, we have to wait longer
 ls $USBROOT/ | grep 'osd.bin$'
@@ -56,11 +66,15 @@ get_ip
 # retrieve application details
 get_bins $APPROOT
 
+# retrieve upnp port
+$UP detect
+# this exports UPNPPORT if a UPNP daemon is found listening
+
 # wait that the usb is mounted
 sleep 10
 
 # will get ready for play button
-prepare_play
+prepare_play >> /tmp/hdsync.log
 
 if [ "$HDSYNC_CHANNEL" = "1" ]; then
     $APPROOT/bin/offer-sync.sh >> /tmp/hdsync.log
