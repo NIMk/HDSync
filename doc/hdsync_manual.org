@@ -1,10 +1,11 @@
 #+TITLE: HDSync Setup Manual
 #+AUTHOR: Denis J. Roio <jaromil@nimk.nl>
-#+DATE: Version 0.4, November 2010
+#+DATE: Version 0.5, Apri 2011
 
 #+OPTIONS ^:nil
 
-#+LATEX_CLASS: book-2column
+
+#+LATEX_CLASS_OPTIONS: [a4paper,twocolumn] 
 
 #+LATEX_HEADER: \usepackage[english]{babel}
 #+LATEX_HEADER: \usepackage{amsfonts, amsmath, amssymb}
@@ -13,10 +14,9 @@
 #+LATEX_HEADER: \usepackage[T1]{fontenc}
 #+LATEX_HEADER: \usepackage{hyperref}
 #+LATEX_HEADER: \usepackage[pdftex]{graphicx}
-#+LATEX_HEADER: \usepackage{fullpage}
 #+LATEX_HEADER: \usepackage{lmodern}
-#+LATEX_HEADER: \usepackage[hang,small]{caption}
-#+LATEX_HEADER:
+#+LATEX_HEADER: \usepackage{float}
+#+LATEX_HEADER: \setlength{\columnsep}{.6in}
 
 [TABLE-OF-CONTENTS]
 
@@ -33,9 +33,27 @@ back (Ethernet RJ45)
 
 [[file:images/wdhdtv-retro.jpg]]
 
-Now, before proceeding with HDSync, download [[http://wiki.wdlxtv.com/Main_Page][B-Rad's firmware WDLXTV
-Live]] and [[http://wiki.wdlxtv.com/Flashing_the_Firmware][flash it]] on your device. Once all this is set you can start
-follow the instructions below.
+* Prepare the devices
+
+Before proceeding with HDSync you need to upgrade your WDTV device
+with the [[http://wdlxtv.com/][WDLXTV]] homebrew firmware developed by B-Rad and his team: you
+need to do this because the firmware developed by the community is, as
+usual, way better than the one distributed by the company.
+
+Flashing the new firmware into the device is fairly easy, detailed
+instructions on how to do that are available on the [[http://wiki.wdlxtv.com/Main_Page][WDLXTV Wiki]].
+
+Be sure to choose a firmware that matches your device model. HDSync
+has been tested only on WDTV Live HD devices which are best supported
+by the WDLXTV firmware series *1.02.21*. There are two kinds of
+firmware, one is LIVE and the other Ext3: both will work, depending
+from how you use your device, the simpliest option is to use the LIVE
+version unless you have more particular requirements that you are
+aware of, beyond the use of HDSync.
+
+To setup the WDTV devices you need to connect them to a monitor or
+projector and operate them with the remote control: that's all what is
+needed to upgrade the firmware once it is loaded on a USB stick.
 
 * Prepare the Usb keys
 
@@ -46,34 +64,21 @@ our software and the video to play.
 First *format the usb sticks with a journaled filesystem like the
 Linux Ext3* using tools like mkfs.ext3 from a GNU/Linux OS.
 
-Then place our application (the *hdsync.app.bin* file) on the USB
-sticks together with two configuration files, one of them needs to be
-edited to set how many video channels you are playing.
+Then place our *hdsync.app.bin* file on the USB sticks together with
+the *hdsync.conf* configuration file. The configuration is a plain
+text file that needs to be edited: set how many video channels you are
+playing (*TOTAL_CHANNELS*), the unique channel number for this usb
+stick starting from 1 (*HDSYNC_CHANNEL*) and on what kind of network
+the sync-starters will connect: (*HDSYNC_NETWORK*) if the IP will be
+dynamically assigned (DYNAMIC) or if the devices are connected on
+their own local network without a DHCP server (STATIC).
 
- + Copy the file *Invisible.osd.bin* in the usb stick
- + Copy the file *hdsync.app.bin* in the usb stick
- + Copy the file *S00custom-options* in the usb key
- + Copy the file *hdsync.conf* in the usb stick
- + Edit hdsync.conf according to your setup (set *TOTAL_CHANNELS* and *HDSYNC_CHANNEL*)
- + Create a *videos/* directory in the usb stick, place your videos
+At last, create a *sync/* directory and put a video file inside. At
+the moment only one video file is supported, the first one in the sync
+directory list, so we recommend to put only one file in that directory
+to be sure of which one will play.
 
-The most important setting is *HDSYNC_CHANNEL* which should simply be
-progressive number for each device, starting from 1: it will be
-smaller or equal than *TOTAL_CHANNELS* and, in case of 1, it indicates
-that the device is the *server* providing the main sync signal to
-other clients.
-
-* Prepare the WDTV devices
-
-To setup the WDTV devices you need to connect them to a monitor or
-project and move around with the remote control, reach the settings
-indicated below and change them with correct values
-
-** Video settings
- + Set the *Video sequence* to *Normal*
- + Set the Browser display to *List mode*
-
-* Connect your syncstarters
+* Connect
 
 HDSync is made so that a complete setup will be extremely simple to
 activate and deactivate: just using an ON/OFF switch, since that is
@@ -136,6 +141,10 @@ made with it; but you must specify reasonably that you are using:
  *HDSync, free and open source software developed by Jaromil at the
  Netherlands Media Art Institute*.
 
+#+begin_latex
+\pagebreak
+#+end_latex
+
 * Support
 
 If you rely on this software and you wish we develop it further, you
@@ -176,8 +185,10 @@ Get in touch:
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-: 
-: 
+#+begin_latex
+\vspace{30 mm}
+#+end_latex
+
 : HDSync is brought to you by: 
 : 
 
