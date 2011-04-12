@@ -1,4 +1,5 @@
-bin_PROGRAMS = netcat broadcaster
+bin_PROGRAMS = netcat broadcaster avremote
+
 netcat_SOURCES = \
 	core.c \
 	flagset.c \
@@ -9,6 +10,8 @@ netcat_SOURCES = \
 	udphelper.c
 
 broadcaster_SOURCES = broadcaster.cpp
+
+avremote_SOURCES = avremote.c
 
 netcat_nc = $(DESTDIR)$(bindir)/nc
 
