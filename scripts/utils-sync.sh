@@ -44,17 +44,17 @@ get_bins() {
     if [ -z $1 ]; then
 	NC="../src/netcat"
 	BC="../src/broadcaster"
-	UP="../scripts/upnp.sh"
+	AV="../src/avremote"
     else
 	NC="$APPROOT/bin/netcat"
 	BC="$APPROOT/bin/broadcaster"
-	UP="$APPROOT/bin/upnp.sh"
+	AV="$APPROOT/bin/avremote"
     fi
     echo "hdsync binaries found:"
     echo "$BC"
     echo "$NC"
-    echo "$UP"
-    export BC NC UP
+    echo "$AV"
+    export BC NC AV
 }
 
 prepare_play() {
@@ -63,27 +63,15 @@ prepare_play() {
     config_tool -c DMA_SCREENSAVER='0'
 
     file=`ls $USBROOT/sync`
-    state=`upnp-cmd GetTransportInfo | awk '/^.CurrentTransportState/ { print $3 }'`
-    $UP load "$USBROOT/sync/$file"
-    while [ "$state" = "NO_MEDIA_PRESENT" ]; do
-	state=`upnp-cmd GetTransportInfo | awk '/^.CurrentTransportState/ { print $3 }'`
-    done
+    $AV -p $UPNPPORT load "$USBROOT/sync/$file"
 
     sync
 
-    $UP play
-    state=`upnp-cmd GetTransportInfo | awk '/^.CurrentTransportState/ { print $3 }'`
-    while [ "$state" = "TRANSITIONING" ]; do
-	state=`upnp-cmd GetTransportInfo | awk '/^.CurrentTransportState/ { print $3 }'`
-    done
+    $AV -p $UPNPPORT play
 
-    sync
+    sleep 0.2
 
-    $UP pause
-    state=`upnp-cmd GetTransportInfo | awk '/^.CurrentTransportStatus/ { print $3 }'`
-    while [ "$state" = "PREBUFFING" ]; do
-	state=`upnp-cmd GetTransportInfo | awk '/^.CurrentTransportStatus/ { print $3 }'`
-    done
+    $AV -p $UPNPPORT pause
 
     sync
 

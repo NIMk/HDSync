@@ -57,7 +57,7 @@ $NC -c -u -l -p 3336 -e true
 
 
 # "press play on tape"
-$UP play
+$AV -p $UPNPPORT play
 
 echo "sync playback started on `date +%T`"
 

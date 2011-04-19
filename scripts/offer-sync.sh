@@ -62,7 +62,10 @@ sync
 # sync start!
 $BC $bcast 3336 s
 
+# wait network latency
+sleep 0.1
+
 # "press play on tape"
-$UP play
+$AV -p $UPNPPORT play
 
 echo "sync playback started on `date +%T`"

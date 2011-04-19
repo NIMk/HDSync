@@ -11,7 +11,7 @@ netcat_SOURCES = \
 
 broadcaster_SOURCES = broadcaster.cpp
 
-avremote_SOURCES = avremote.c
+avremote_SOURCES = avremote.c avremote.h cmdline.c parsers.c parsers.h
 
 netcat_nc = $(DESTDIR)$(bindir)/nc
 

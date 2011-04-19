@@ -32,7 +32,7 @@ send_message() {
     fi
     action="$1"
     message="$2"
-    smsg="<?xml version=\"1.0\" encoding=\"utf-8\"?><s:Envelope s:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\" xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\"><s:Body><u:$action xmlns:u=\"urn:schemas-upnp-org:service:AVTransport:1\"><InstanceID>0</InstanceID>$message</s:Body></s:Envelope>"
+    smsg="<?xml version=\"1.0\" encoding=\"utf-8\"?><s:Envelope s:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\" xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\"><s:Body><u:$action xmlns:u=\"urn:schemas-upnp-org:service:AVTransport:1\"><InstanceID>0</InstanceID>$message</u:$action></s:Body></s:Envelope>"
     wget -O - -q --post-data="$smsg" \
 	$HOST:$PORT/MediaRenderer_AVTransport/control \
 	--header="SOAPACTION: \"urn:schemas-upnp-org:service:AVTransport:1#$action\"" \

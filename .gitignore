@@ -1,7 +1,9 @@
 src/broadcaster
 src/netcat
+src/avremote
 *~
 *.o
+*.log
 .deps
 Makefile
 Makefile.in

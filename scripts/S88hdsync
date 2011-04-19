@@ -18,7 +18,7 @@
 # wait the boot to complete
 
 if [ "$1" = "stop" ]; then
-    upnp.sh stop
+    $AV -p $UPNPPORT stop
     rm -f /tmp/hdsync.reply
     umount /apps/hdsync
     exit 0
@@ -27,6 +27,9 @@ fi
 sleep 15
 
 APPROOT=/apps/hdsync
+
+# kill dmaosd!
+killall dmaosd
 
 touch /tmp/hdsync.log
 # USBROOT=`mount | awk '/.tmp.mnt/ { print $3}'`
@@ -66,8 +69,9 @@ get_ip
 # retrieve application details
 get_bins $APPROOT
 
-# retrieve upnp port
-$UP detect
+
+UPNPPORT="`lsof -a -i4 -sTCP:LISTEN -c DMARender -F n | awk -v FS=':' '/^n/ {print $2}'`"
+export UPNPPORT
 # this exports UPNPPORT if a UPNP daemon is found listening
 
 # wait that the usb is mounted
