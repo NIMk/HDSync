@@ -2,9 +2,6 @@
 #+AUTHOR: Denis J. Roio <jaromil@nimk.nl>
 #+DATE: Version 0.5, Apri 2011
 
-#+OPTIONS ^:nil
-
-
 #+LATEX_CLASS_OPTIONS: [a4paper,twocolumn] 
 
 #+LATEX_HEADER: \usepackage[english]{babel}

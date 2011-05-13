@@ -11,10 +11,11 @@
 :   MM    MM `Mb    MM      L.   I8     VVV      MM    MM YM.    ,
 : .JMML  JMML.`Wbmd"MML.    M9mmmP'     ,V     .JMML  JMML.YMbmd'
 :                                      ,V
-:                                   OOb'              ver. 0.4
+:                                   OOb'              ver. 0.5
 :
 :      A network based sync-starter for multi-channel HD Video
 :                                    by Denis Roio aka Jaromil
+:
 :      http://nimk.nl/syncstarter
 
 The digital video syncstarter software is developed and employed at
@@ -42,8 +43,8 @@ can afford for approx 100EUR on the consumer market.
 This release can synchronise the playback of multiple channels
 (virtually unlimited) on the same local network: hdsync can
 automatically handshake and start playing in sync, restoring the sync
-at every loop. Empirical tests show an error margin of 10-15 frames,
-with further development we aim to achieve frame exact sync.
+at every loop. Empirical tests show a current error margin of 1 to 3
+frames, with further development we aim to achieve frame exact sync.
 
 ** Documentation
 
