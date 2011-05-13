@@ -17,7 +17,7 @@
 
 PATH=/usr/bin:/bin:/usr/sbin:/sbin
 
-. /apps/hdsync/bin/utils-sync.sh
+. $APPROOT/bin/utils-sync.sh
 
 
 # launch background listener for acks
@@ -28,37 +28,51 @@ touch /tmp/hdsync.reply
     echo $answer >> /tmp/hdsync.reply
     done) &
 
-echo "listening for offers on $IP"
+# loop continuously
+while [ true ]; do
+    sleep 3
+    lsof | grep video > /dev/null
+    if [ $? == 1 ]; then
 
-offer="`echo | $NC -c -u -l -p 3332`"
-
-echo "offered sync by $offer"
-
-
+	rm -f /tmp/hdsync.reply
+	touch /tmp/hdsync.reply
+	
+	echo "listening for offers on $IP"
+	
+	offer="`echo | $NC -c -u -l -p 3332`"
+	
+	echo "offered sync by $offer"
+	
+	
         # repeat udp replies to offer until ack
-echo "replying with our ip until ack"
-ack=""
-while [ "$ack" = "" ]; do
-    sleep 1
-    echo "$IP" | $NC -c -u $offer 3331
-    echo -n "."
-    ack=`cat /tmp/hdsync.reply`
+	echo "replying with our ip until ack"
+	ack=""
+	while [ "$ack" = "" ]; do
+	    sleep 1
+	    echo "$IP" | $NC -c -u $offer 3331
+	    echo -n "."
+	    ack=`cat /tmp/hdsync.reply`
+	done
+	
+	echo "ack received, we are channel $ack"
+	
+	sync
+	
+	echo "ready: awaiting syncstarter signal"
+	
+	
+        # exit after connection (-e true)
+	$NC -c -u -l -p 3336 -e true
+	
+	if [ $HDSYNC_SLEEP ]; then
+	    sleep $HDSYNC_SLEEP
+	fi
+	
+        # "press play on tape"
+	$AV -p $UPNPPORT play
+	
+	echo "sync playback started on `date +%T`"
+    fi
 done
-
-echo "ack received, we are channel $ack"
-
-sync
-
-echo "ready: awaiting syncstarter signal"
-
-
-# exit after connection (-e true)
-$NC -c -u -l -p 3336 -e true
-
-
-# "press play on tape"
-$AV -p $UPNPPORT play
-
-echo "sync playback started on `date +%T`"
 
 

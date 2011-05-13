@@ -62,18 +62,23 @@ prepare_play() {
     config_tool -c DMA_ENABLE_SCREENSAVER='0'
     config_tool -c DMA_SCREENSAVER='0'
 
-    file=`ls $USBROOT/sync`
-    $AV -p $UPNPPORT load "$USBROOT/sync/$file"
+    file=`ls $USBROOT/video`
+    $AV -p $UPNPPORT load "$USBROOT/video/$file"
 
     sync
 
     $AV -p $UPNPPORT play
 
-    sleep 0.2
-
-    $AV -p $UPNPPORT pause
-
     sync
+    sleep 5
+
+    $AV -p $UPNPPORT stop
+
+    # kill dmaosd!
+    killall dmaosd
+
+    # $AV -p $UPNPPORT pause
+    # sync
 
     echo "ready to play on `date +%T`"
 }

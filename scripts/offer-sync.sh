@@ -27,45 +27,58 @@ touch /tmp/hdsync.reply
     echo $answer >> /tmp/hdsync.reply
     done) &
 
-echo "broadcasting offer signals from $IP"
+# loop continuously
+while [ true ]; do
+    sleep 5
+    lsof | grep video > /dev/null
+    if [ $? == 1 ]; then	# no video is running
+
+	rm -f /tmp/hdsync.reply
+	touch /tmp/hdsync.reply
+
+	echo "broadcasting offer signals from $IP"
 	# we do broadcast only on class C
 	# must always make sure also listener expects on class C
-bcast=`echo $IP | awk 'BEGIN { FS="." } {print $1 "." $2 "." $3 }'`.255
-echo "to netmask $bcast"
+	bcast=`echo $IP | awk 'BEGIN { FS="." } {print $1 "." $2 "." $3 }'`.255
+	echo "to netmask $bcast"
+	
+        # send broadcast signals until somebody listens
+	listeners=0
+	expected=`expr $TOTAL_CHANNELS - 1`
+	while [ "$listeners" != "$expected" ]; do
+	    echo -n "$b: `date +%X` "
+	    $BC $bcast 3332 $IP
+	    sleep 2
+	    listeners=`cat /tmp/hdsync.reply | sort | uniq | wc -w`
+	done
 
-# send broadcast signals until somebody listens
-listeners=0
-expected=`expr $TOTAL_CHANNELS - 1`
-while [ "$listeners" != "$expected" ]; do
-    echo -n "$b: `date +%X` "
-    $BC $bcast 3332 $IP
-    sleep 2
-    listeners=`cat /tmp/hdsync.reply | sort | uniq | wc -w`
+	echo "harvesting replies"
+	cat /tmp/hdsync.reply | sort | uniq > /tmp/hdsync.listeners
+	
+	echo "sending acks"
+	c=1
+	for l in `cat /tmp/hdsync.listeners`; do
+	    echo "$c: $l"
+	    echo "$c" | $NC -c -u $l 3333
+	done
+	
+	
+	echo "waiting for other players to get ready..."
+	sync
+	sleep 10
+	
+	
+	
+        # sync start!
+	$BC $bcast 3336 s
+	
+	if [ $HDSYNC_SLEEP ]; then
+	    sleep $HDSYNC_SLEEP
+	fi
+	
+        # "press play on tape"
+	$AV -p $UPNPPORT play
+	
+	echo "sync playback started on `date +%T`"
+    fi
 done
-
-echo "harvesting replies"
-cat /tmp/hdsync.reply | sort | uniq > /tmp/hdsync.listeners
-
-echo "sending acks"
-c=1
-for l in `cat /tmp/hdsync.listeners`; do
-    echo "$c: $l"
-    echo "$c" | $NC -c -u $l 3333
-done
-
-
-echo "waiting for other players to get ready..."
-sleep 10
-
-sync
-
-# sync start!
-$BC $bcast 3336 s
-
-# wait network latency
-sleep 0.1
-
-# "press play on tape"
-$AV -p $UPNPPORT play
-
-echo "sync playback started on `date +%T`"

@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# Copyright (C) 2010 Denis Roio <jaromil@nimk.nl>
+# Copyright (C) 2010-2011 Denis Roio <jaromil@nimk.nl>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -17,8 +17,11 @@
 
 # wait the boot to complete
 
+APPROOT=/apps/hdsync
+
 if [ "$1" = "stop" ]; then
-    $AV -p $UPNPPORT stop
+    UPNPPORT="`lsof -a -i4 -sTCP:LISTEN -c DMARender -F n | awk -v FS=':' '/^n/ {print $2}'`"
+    $APPROOT/bin/avremote -p $UPNPPORT stop
     rm -f /tmp/hdsync.reply
     umount /apps/hdsync
     exit 0
@@ -26,10 +29,6 @@ fi
 
 sleep 15
 
-APPROOT=/apps/hdsync
-
-# kill dmaosd!
-killall dmaosd
 
 touch /tmp/hdsync.log
 # USBROOT=`mount | awk '/.tmp.mnt/ { print $3}'`
@@ -58,6 +57,7 @@ export USBROOT
 export APPROOT
 export HDSYNC_NETWORK
 export HDSYNC_CHANNEL
+export HDSYNC_SLEEP
 export TOTAL_CHANNELS
 
 # load up utils
@@ -69,6 +69,9 @@ get_ip
 # retrieve application details
 get_bins $APPROOT
 
+if [ $HDSYNC_SLEEP ]; then
+    echo "SLEEP adjust set to $HDSYNC_SLEEP seconds" >> /tmp/hdsync.log
+fi
 
 UPNPPORT="`lsof -a -i4 -sTCP:LISTEN -c DMARender -F n | awk -v FS=':' '/^n/ {print $2}'`"
 export UPNPPORT

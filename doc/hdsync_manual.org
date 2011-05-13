@@ -73,7 +73,7 @@ the sync-starters will connect: (*HDSYNC_NETWORK*) if the IP will be
 dynamically assigned (DYNAMIC) or if the devices are connected on
 their own local network without a DHCP server (STATIC).
 
-At last, create a *sync/* directory and put a video file inside. At
+At last, create a *video/* directory and put a video file inside. At
 the moment only one video file is supported, the first one in the sync
 directory list, so we recommend to put only one file in that directory
 to be sure of which one will play.
