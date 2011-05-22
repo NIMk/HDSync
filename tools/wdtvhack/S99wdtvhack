@@ -29,5 +29,6 @@ mv /tmp/shadow /conf/shadow
 
 # reset web password to wdlxtv:wdlxtv
 rm -f /conf/htpasswd
+echo "root:WDLXTV-Webend:16cb4a092111f59b1fee360c90746f73" > /conf/htpasswd
 
 sync
