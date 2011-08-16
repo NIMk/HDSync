@@ -23,15 +23,15 @@
 #include <stdio.h>
 #include <string.h>
 
-#ifdef USE_UPNP
-
 #include <miniwget.h>
 #include <miniupnpc.h>
 #include <upnpcommands.h>
 #include <upnperrors.h>
 
+#include <avremote.h>
 
-int upnp_discover()
+
+int upnp_discover(upnp_t *upnp)
 {
     const char * rootdescurl = 0;
     const char * multicastif = 0;
@@ -41,10 +41,18 @@ int upnp_discover()
     struct UPNPDev *dev;
     struct UPNPUrls urls;
     struct IGDdatas data;
-    int r;
+    int r, err;
+    int num = 0;
 
-    devlist = upnpDiscover(1000, multicastif, minissdpdpath, 0);
-    
+    // damn programmers who change API prototypes in headers
+    // without versioning.
+
+/* #ifdef UPNPDISCOVER_SUCCESS */
+    devlist = upnpDiscover(1000, multicastif, minissdpdpath, 0, 0, &err);
+/* #else */
+/*     devlist = upnpDiscover(1000, multicastif, minissdpdpath, 0); */
+/* #endif */
+
     r = UPNP_GetValidIGD(devlist, &urls, &data, lanaddr, sizeof(lanaddr));
     if (!r) {
       fprintf(stderr,"no valid UPnP devices found\n");
@@ -52,10 +60,10 @@ int upnp_discover()
     } else if (r == 3) { // 3 = an UPnP root device has been found (not an IGD)
 
       dev = devlist;
-      while(dev) {
+      for( dev = devlist; dev; dev = dev->pNext, num++) {
 
 	// parse out ip and port from url
-	char ip[256];
+	char ip[MAX_HOSTNAME_SIZE];
 	char port[64];
 	char tmp[512];
 	char *p, *pp;
@@ -66,7 +74,7 @@ int upnp_discover()
 	// ip
 	do p+=2; while(*p != '/'); p++;
 	pp = p; do pp++; while(*pp != ':'); *pp = 0;
-	snprintf(ip,255,"%s",p);
+	snprintf(ip,MAX_HOSTNAME_SIZE-1,"%s",p);
 
 	// port
 	p = pp+1; pp = p;
@@ -74,20 +82,19 @@ int upnp_discover()
 	snprintf(port,63,"%s",p);
 
 	fprintf(stderr,"%s\t%s\t%s\t%s\n", dev->st, dev->descURL, ip, port);
-	dev = dev->pNext;
+
+	if(!num) { // first found
+	  sscanf(port, "%u", &upnp->port);
+	  snprintf(upnp->hostname, MAX_HOSTNAME_SIZE-1, "%s", ip);
+	}
+
       }
 
-      /* fprintf(stderr,
-	      " controlURL: %s\n"
-	      " ipcondescURL: %s\n"
-	      " controlURL_CIF: %s\n",
-	      urls.controlURL, urls.ipcondescURL, urls.controlURL_CIF); */
-      
       FreeUPNPUrls(&urls);
+
     }
     freeUPNPDevlist(devlist); devlist = 0;
 
-    return(r);
+    return(num);
 }
 
-#endif

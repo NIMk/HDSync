@@ -49,13 +49,6 @@
 
 #include <avremote.h>
 
-/* Buffer Boundaries
-   the following defines set the maximum size we allow for buffers used */
-#define MAX_HOSTNAME_SIZE 256
-#define MAX_MSG_SIZE 2048
-#define MAX_HDR_SIZE 512
-#define MAX_RES_SIZE 1401
-#define MAX_META_SIZE 2048
 
 
 upnp_t *create_upnp() {
@@ -90,7 +83,7 @@ void free_upnp(upnp_t *upnp) {
   free(upnp);
 }
 
-int connect_upnp(upnp_t *upnp, char *hostname, int port) {
+int connect_upnp(upnp_t *upnp) {
   struct sockaddr_in serveraddr;
   //  const struct sockaddr *serveraddr;
   struct hostent *host;
@@ -109,9 +102,9 @@ int connect_upnp(upnp_t *upnp, char *hostname, int port) {
   }
 
   /* gethostbyname: get the server's DNS entry */
-  host = gethostbyname(hostname);
+  host = gethostbyname(upnp->hostname);
   if (host == NULL) {
-    fprintf(stderr,"error: no such host as %s (%s)\n", hostname, strerror(errno));
+    fprintf(stderr,"error: no such host as %s (%s)\n", upnp->hostname, strerror(errno));
     return(-1);
   }
   
@@ -120,7 +113,7 @@ int connect_upnp(upnp_t *upnp, char *hostname, int port) {
   serveraddr.sin_family = AF_INET;
   bcopy((char *)host->h_addr, 
 	(char *)&serveraddr.sin_addr.s_addr, host->h_length);
-  serveraddr.sin_port = htons(port);
+  serveraddr.sin_port = htons(upnp->port);
   
   /* connect: create a connection with the server */
   if (connect(sockfd, (const struct sockaddr*)&serveraddr, sizeof(serveraddr)) < 0) {
@@ -128,8 +121,6 @@ int connect_upnp(upnp_t *upnp, char *hostname, int port) {
     return(-1);
   }
 
-  snprintf(upnp->hostname, 255, "%s",hostname);
-  upnp->port = port;
   upnp->sockfd = sockfd;
 
   return(sockfd);
@@ -145,7 +136,7 @@ void render_uri_meta(upnp_t *upnp, char *path) {
 
   struct stat fs;
   if( stat(path,&fs) < 0 ) {
-    fprintf(stderr,"error: cannot load file %s (%s)\n", path, strerror(errno));
+    //    fprintf(stderr,"error: cannot load file %s (%s)\n", path, strerror(errno));
     filesize = 0;
   } else
     filesize = fs.st_size;
@@ -154,7 +145,12 @@ void render_uri_meta(upnp_t *upnp, char *path) {
   pdir = dirname(dir);
   strncpy(file,path,1023);
   pfile = basename(file);
-  snprintf(url,1023,"file://%s",path);
+  if( strncmp(path,"http://",7)==0 )
+    snprintf(url,1023,"%s",path);
+  else if( strncmp(path,"ftp://",6)==0 )
+    snprintf(url,1023,"%s",path);
+  else
+    snprintf(url,1023,"file://%s",path);
   
   
   snprintf(upnp->meta,MAX_META_SIZE-1,UPNP_META_FORMAT, url,
@@ -220,7 +216,9 @@ int recv_upnp(upnp_t *upnp, int timeout) {
 }
 
 int print_upnp(upnp_t *upnp) {
-  fprintf(stderr,"header (%u bytes):\n\n%s\n\n",upnp->hdrlen, upnp->hdr);
-  fprintf(stderr,"message (%u bytes):\n\n%s\n\n",upnp->msglen, upnp->msg);
+  fprintf(stderr,"header (%u bytes):\n",upnp->hdrlen);
+  fprintf(stdout,"%s\n\n", upnp->hdr);
+  fprintf(stderr,"message (%u bytes):\n",upnp->msglen);
+  fprintf(stdout,"%s\n\n", upnp->msg);
 }
 

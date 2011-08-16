@@ -32,7 +32,6 @@
 #include <errno.h>
 
 #include <avremote.h>
-#include <discover.h>
 #include <parsers.h>
 
 // our exit codes are shell style: 1 is error, 0 is success
@@ -47,6 +46,7 @@ char server[512];
 int port = 0;
 int dry_run = 0;
 int discover = 0;
+int pipe_stdin = 0;
 
 parser_f *parser = NULL;
 
@@ -70,18 +70,20 @@ void cmdline(int argc, char **argv) {
 	      " This is free software: you are free to change and redistribute it.\n"
 	      " The latest AVTransport sourcecode is published on <%s>\n"
 	      "\n"
-	      "Syntax: avremote [options] command [file]\n"
+	      "Syntax: avremote [options] [command] [args...]\n"
 	      "\n"
 	      "Commands:\n"
 	      "\n"
-#ifdef USE_UPNP
-	      " discover    search for upnp devices on the network\n"
-#endif
+	      " discover    scan for upnp devices on the network\n"
 	      " load        load a file and prepare it for playback\n"
+	      " mode        set playback mode (NORMAL or REPEAT_ONE)\n"
 	      " play        start playing the selected file\n"
 	      " pause       pause currently running playback\n"
 	      " stop        stop playback and return to menu\n"
 	      " get         get the current status of the device\n"
+	      " jump        seek to a position in time (00:00:00)\n"
+	      "\n"
+	      " none means load and play URL, or use - to read xml from stdin\n"
 	      "\n"
 	      "Options:\n"
 	      "\n"
@@ -99,7 +101,7 @@ void cmdline(int argc, char **argv) {
 
     case 'v':
       fprintf(stderr,"%s - simple commandline tool to send AVTransport commands over UPNP\n"
-	      "version %s (Apr/2011) by Jaromil - Netherlands Media Art Institute\n"
+	      "version %s by Jaromil - Netherlands Media Art Institute\n"
 	      "Copyright (C) 2011 NIMk Artlab, License GNU AGPL v3+\n"
 	      "This is free software: you are free to change and redistribute it\n",
 	      PACKAGE, VERSION);
@@ -139,47 +141,44 @@ void cmdline(int argc, char **argv) {
     discover = 1;
   } else if(!dry_run) {
     // check requires args
-    if(!command[0]) {
-      fprintf(stderr,"command not specified, see %s -h for help\n",argv[0]);
-      exit(1);
-    }
-    
-    
-    // not in dry run nor discovery, check for necessary options
-    if(!port) {
-      fprintf(stderr,"port not specified, use -p\n");
-      exit(1);
-    }
-    
-    if(!server[0]) {
-      fprintf(stderr,"server not specified, using localhost\n");
-      sprintf(server,"%s","localhost");
-    }
+    if( command[0]=='-' && !command[1]) pipe_stdin++;
+
+        
   }
 }
 
 
 int main(int argc, char **argv) {
   upnp_t *upnp;
+  int found;
 
   cmdline(argc, argv);
 
-
-#ifdef USE_UPNP
-  if (discover)
-    {
-      fprintf(stderr,"Performing upnp autodiscovery...\n");
-      upnp_discover();
-      exit(0);
-    }
-#endif
-  
   upnp = create_upnp();
+  
+  // no server specified, force discovery
+  if(!server[0] || !port) discover = 1;
+
+  if (discover && !dry_run)
+    {
+      fprintf(stderr,"Performing upnp discovery...\n");
+      found = upnp_discover(upnp);
+
+      if(found != 1) {
+	fprintf(stderr,"Please specify a target device host and port.\n");
+	free_upnp(upnp);
+	exit(0);
+      }
+
+    }
+
+  // commandline or detection found explicit addresses
+  snprintf(upnp->hostname, MAX_HOSTNAME_SIZE-1,"%s",server);
+  upnp->port = port;
 
   if(!dry_run)
     {
-      
-      if ( connect_upnp (upnp, server, port) < 0 )
+      if ( connect_upnp (upnp) < 0 )
 	{
 	  fprintf(stderr,"can't connect to %s:%u: operation aborted.\n", server, port);
 	  exit(ERR);
@@ -193,15 +192,49 @@ int main(int argc, char **argv) {
       upnp->port = 0;
       
     }
-  
-  // command parsing is a cascade switch on single letters
-  // this is supposedly faster than strcmp
+
+  // pipe raw xml commands from stdin
+  if(pipe_stdin) {
+    int res;
+    int in = 0;
+    char raw[8192];
+
+    while( !feof(stdin) )
+      {
+	in = fread(raw,1,8191,stdin);
+	res = write(upnp->sockfd,raw,in);
+	if(res != in)
+	  fprintf(stderr,"upnp pipe wrote only %u of %u bytes",res, in);
+	recv_upnp(upnp, 1000);
+	fprintf(stderr,"%s\n",upnp->res);
+      }
+    free_upnp(upnp);
+    exit(0);
+  }
+
+  /* command parsing is a cascade switch on single letters
+     this is supposedly faster than strcmp. mapping:
+
+     D iscovery
+     L oad
+     P lay
+     PA use
+     S top
+     G et
+     M ode
+     J ump
+
+  */
   switch(command[0]) {
+
+  case 'd': // discovery
+    // was processed earlier
+    break;
 
   case 'l': // load url
     render_uri_meta(upnp,filename);
     render_upnp(upnp,"SetAVTransportURI", upnp->meta);
-    send_upnp(upnp);
+    //    send_upnp(upnp);
     break;
 
   case 'p': 
@@ -230,12 +263,40 @@ int main(int argc, char **argv) {
     
     break;
 
+  case 'm': // set the playmode:
+    // "NORMAL", "REPEAT_ONE", "REPEAT_ALL", "RANDOM"
+    {
+      char tmp[256];
+      snprintf(tmp,255,"<NewPlayMode>%s</NewPlayMode>",filename);
+      render_upnp(upnp,"SetPlayMode",tmp);
+    }
+    break;
+
+  case 'j': // jump aka seek
+    // <SeekMode> and <SeekTarget>
+    {
+      char tmp[512];
+      snprintf(tmp,511,"<Unit>REL_TIME</Unit><Target>%s</Target>",filename);
+      render_upnp(upnp,"Seek",tmp);
+    }
+    break;
+
   default:
-    fprintf(stderr,"warning: command not recognized, sending anyway.\n");
-    render_upnp(upnp,command,"");
-    
-    //    free_upnp(upnp);
-    //    exit(1);
+    if(!command[0]) break;
+    fprintf(stderr,"warning: command not recognized, loading and playing as url\n");
+
+    // load
+    render_uri_meta(upnp,command);
+    render_upnp(upnp,"SetAVTransportURI", upnp->meta);
+    send_upnp(upnp);
+    recv_upnp(upnp, 1000);
+
+    // must re-connect socket between commands
+    close(upnp->sockfd);
+    upnp->sockfd = 0;
+    connect_upnp(upnp);
+
+    render_upnp(upnp,"Play","<Speed>1</Speed>");
   }
 
   if (dry_run)
