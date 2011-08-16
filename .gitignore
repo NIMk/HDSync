@@ -1,6 +1,7 @@
 src/broadcaster
 src/netcat
 src/avremote
+src/hdsync
 *~
 *.o
 *.log
