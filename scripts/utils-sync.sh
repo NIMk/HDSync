@@ -45,15 +45,20 @@ get_bins() {
 	NC="../src/netcat"
 	BC="../src/broadcaster"
 	AV="../src/avremote"
+	SYNC="../src/hdsync"
+
     else
 	NC="$APPROOT/bin/netcat"
 	BC="$APPROOT/bin/broadcaster"
 	AV="$APPROOT/bin/avremote"
+	SYNC="$APPROOT/bin/hdsync"
     fi
+
     echo "hdsync binaries found:"
     echo "$BC"
     echo "$NC"
     echo "$AV"
+    echo "$SYNC"
     export BC NC AV
 }
 
@@ -62,20 +67,14 @@ prepare_play() {
     config_tool -c DMA_ENABLE_SCREENSAVER='0'
     config_tool -c DMA_SCREENSAVER='0'
 
-    file=`ls $USBROOT/video`
-    $AV -p $UPNPPORT load "$USBROOT/video/$file"
-
-    sync
-
-    $AV -p $UPNPPORT play
-
-    sync
-    sleep 5
-
-    $AV -p $UPNPPORT stop
-
     # kill dmaosd!
     killall dmaosd
+
+    file=`ls $USBROOT/video`
+    $SYNC -s localhost -p $UPNPPORT prepare "$USBROOT/video/$file"
+
+    # hdsync prepare makes: load, play and pause
+    sync
 
     # $AV -p $UPNPPORT pause
     # sync

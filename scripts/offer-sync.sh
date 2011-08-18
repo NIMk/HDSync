@@ -75,10 +75,10 @@ while [ true ]; do
 	if [ $HDSYNC_SLEEP ]; then
 	    sleep $HDSYNC_SLEEP
 	fi
-	
+
         # "press play on tape"
-	$AV -p $UPNPPORT play
-	
+	$SYNC -s localhost -p $UPNPPORT start
+		
 	echo "sync playback started on `date +%T`"
     fi
 done

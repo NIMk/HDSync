@@ -69,7 +69,7 @@ while [ true ]; do
 	fi
 	
         # "press play on tape"
-	$AV -p $UPNPPORT play
+	$SYNC -s localhost -p $UPNPPORT start
 	
 	echo "sync playback started on `date +%T`"
     fi

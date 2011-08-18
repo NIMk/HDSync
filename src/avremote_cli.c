@@ -40,16 +40,18 @@
 // uncomment to debug
 #define DEBUG 1
 
-// uncomment to also use UPNP discovery
-// (depends from miniupnp library)
-// #define UPNP_DISCOVERY 1
+// uncomment to activate discovery
+// (requires miniupnp)
+// #define DISCOVER 1
 
 char filename[512];
 char command[64];
 char server[512];
 int port = 0;
 int dry_run = 0;
+#ifdef DISCOVER
 int discover = 0;
+#endif
 int pipe_stdin = 0;
 
 parser_f *parser = NULL;
@@ -78,7 +80,7 @@ void cmdline(int argc, char **argv) {
 	      "\n"
 	      "Commands:\n"
 	      "\n"
-#ifdef UPNP_DISCOVERY
+#ifdef DISCOVER
 	      " discover    scan for upnp devices on the network\n"
 #endif
 	      " load        load a file and prepare it for playback\n"
@@ -143,7 +145,7 @@ void cmdline(int argc, char **argv) {
 
   } while(res != -1);
 
-#ifdef UPNP_DISCOVERY
+#ifdef DISCOVER
   if(command[0] == 'd') { // discover
     discover = 1;
   } else 
@@ -163,8 +165,8 @@ int main(int argc, char **argv) {
   cmdline(argc, argv);
 
   upnp = create_upnp();
-  
-#ifdef UPNP_DISCOVERY
+
+#ifdef DISCOVER  
   // no server specified, force discovery
   if(!server[0] || !port) discover = 1;
 
@@ -237,12 +239,11 @@ int main(int argc, char **argv) {
   */
   switch(command[0]) {
 
+#ifdef DISCOVER
   case 'd': // discovery
-#ifndef UPNP_DISCOVER
-    fprintf(stderr,"UPNP discovery feature not enabled for this binary\n");
-#endif
     // was processed earlier
     break;
+#endif
 
   case 'l': // load url
     render_uri_meta(upnp,filename);

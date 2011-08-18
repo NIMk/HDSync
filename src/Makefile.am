@@ -1,4 +1,4 @@
-bin_PROGRAMS = netcat broadcaster hdsync
+bin_PROGRAMS = netcat broadcaster hdsync avremote
 
 netcat_SOURCES = \
 	core.c \
@@ -11,7 +11,9 @@ netcat_SOURCES = \
 
 broadcaster_SOURCES = broadcaster.cpp
 
-hdsync_SOURCES = avremote.c avremote.h cmdline.c parsers.c parsers.h
+hdsync_SOURCES = avremote.c avremote.h hdsync_cli.c parsers.c parsers.h
+
+avremote_SOURCES = avremote.c avremote.h avremote_cli.c parsers.c parsers.h
 
 netcat_nc = $(DESTDIR)$(bindir)/nc
 
