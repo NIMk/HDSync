@@ -21,7 +21,6 @@ depcomp
 install-sh
 missing
 stamp-h1
-wdhdsync-loop
-wdhdsync.app
-wdhdsync.app.bin
-wdlxtv_optware.app.bin
+hdsync-loop
+hdsync.app
+hdsync.app.bin

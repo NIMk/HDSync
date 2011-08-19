@@ -75,6 +75,7 @@ fi
 
 UPNPPORT="`lsof -a -i4 -sTCP:LISTEN -c DMARender -F n | awk -v FS=':' '/^n/ {print $2}'`"
 export UPNPPORT
+echo "UPNP port detected listening on $UPNPPORT" >> /tmp/hdsync.log
 # this exports UPNPPORT if a UPNP daemon is found listening
 
 # wait that the usb is mounted
@@ -84,7 +85,9 @@ sleep 10
 prepare_play >> /tmp/hdsync.log
 
 if [ "$HDSYNC_CHANNEL" = "1" ]; then
+    echo "Offering sync" >> /tmp/hdsync.log
     $APPROOT/bin/offer-sync.sh >> /tmp/hdsync.log
 else
+    echo "Listening for sync offers" >> /tmp/hdsync.log
     $APPROOT/bin/listen-sync.sh >> /tmp/hdsync.log
 fi

@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# Copyright (C) 2010 Denis Roio <jaromil@nimk.nl>
+# Copyright (C) 2010-2011 Denis Roio <jaromil@nimk.nl>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -59,7 +59,7 @@ get_bins() {
     echo "$NC"
     echo "$AV"
     echo "$SYNC"
-    export BC NC AV
+    export BC NC AV SYNC
 }
 
 prepare_play() {
@@ -75,9 +75,6 @@ prepare_play() {
 
     # hdsync prepare makes: load, play and pause
     sync
-
-    # $AV -p $UPNPPORT pause
-    # sync
 
     echo "ready to play on `date +%T`"
 }

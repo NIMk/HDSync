@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# Copyright (C) 2010 Denis Roio <jaromil@nimk.nl>
+# Copyright (C) 2010-2011 Denis Roio <jaromil@nimk.nl>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -28,12 +28,23 @@ touch /tmp/hdsync.reply
     echo $answer >> /tmp/hdsync.reply
     done) &
 
+# # check that the video is prepared
+# while [ true ]; do
+#     sleep 3
+#     lsof | grep 'mnt.*video' > /dev/null
+#     if [ $? == 0 ]; then	# a video is loaded
+# 	break
+#     fi
+# done
+
 # loop continuously
 while [ true ]; do
     sleep 3
-    lsof | grep video > /dev/null
-    if [ $? == 1 ]; then
 
+    # check that the video is not already playing
+    state=`$AV -s localhost -p $UPNPPORT get 2>&1| awk '/^TInfo:/ {print $2}'`
+    if [ "$state" == "PAUSED_PLAYBACK" ]; then
+	
 	rm -f /tmp/hdsync.reply
 	touch /tmp/hdsync.reply
 	
@@ -69,9 +80,11 @@ while [ true ]; do
 	fi
 	
         # "press play on tape"
+	echo "$SYNC -s localhost -p $UPNPPORT start"
 	$SYNC -s localhost -p $UPNPPORT start
 	
 	echo "sync playback started on `date +%T`"
+	sleep 3
     fi
 done
 
