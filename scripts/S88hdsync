@@ -81,8 +81,17 @@ echo "UPNP port detected listening on $UPNPPORT" >> /tmp/hdsync.log
 # wait that the usb is mounted
 sleep 10
 
-# will get ready for play button
-prepare_play >> /tmp/hdsync.log
+# turn off screensaver
+config_tool -c DMA_ENABLE_SCREENSAVER='0'
+config_tool -c DMA_SCREENSAVER='0'
+
+# kill all services hogging our resources
+killall dmaosd
+killall pandora_ep
+killall apache2
+killall smbtree
+
+
 
 if [ "$HDSYNC_CHANNEL" = "1" ]; then
     echo "Offering sync" >> /tmp/hdsync.log

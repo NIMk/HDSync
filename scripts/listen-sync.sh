@@ -39,11 +39,26 @@ touch /tmp/hdsync.reply
 
 # loop continuously
 while [ true ]; do
-    sleep 3
 
-    # check that the video is not already playing
+    sync
+
+    sleep 10
+
+    # check the state of the video
     state=`$AV -s localhost -p $UPNPPORT get 2>&1| awk '/^TInfo:/ {print $2}'`
-    if [ "$state" == "PAUSED_PLAYBACK" ]; then
+
+    if [ "$state" == "NO_MEDIA_PRESENT" ]; then
+
+        # will get ready for sync
+	prepare_play >> /tmp/hdsync.log
+
+    elif [ "$state" == "STOPPED" ]; then
+
+        # will get ready for sync again
+	prepare_play >> /tmp/hdsync.log
+
+    elif [ "$state" == "PAUSED_PLAYBACK" ]; then
+	# will sync start
 	
 	rm -f /tmp/hdsync.reply
 	touch /tmp/hdsync.reply
@@ -80,11 +95,10 @@ while [ true ]; do
 	fi
 	
         # "press play on tape"
-	echo "$SYNC -s localhost -p $UPNPPORT start"
 	$SYNC -s localhost -p $UPNPPORT start
 	
 	echo "sync playback started on `date +%T`"
-	sleep 3
+
     fi
 done
 

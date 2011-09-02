@@ -63,13 +63,6 @@ get_bins() {
 }
 
 prepare_play() {
-    # turn off screensaver
-    config_tool -c DMA_ENABLE_SCREENSAVER='0'
-    config_tool -c DMA_SCREENSAVER='0'
-
-    # kill dmaosd!
-    killall dmaosd
-
     file=`ls $USBROOT/video`
     $SYNC -s localhost -p $UPNPPORT prepare "$USBROOT/video/$file"
 
