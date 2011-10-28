@@ -11,24 +11,21 @@
 :   MM    MM `Mb    MM      L.   I8     VVV      MM    MM YM.    ,
 : .JMML  JMML.`Wbmd"MML.    M9mmmP'     ,V     .JMML  JMML.YMbmd'
 :                                      ,V
-:                                   OOb'              ver. 0.5
+:                                   OOb'              ver. 0.6
 :
 :      A network based sync-starter for multi-channel HD Video
 :                                    by Denis Roio aka Jaromil
 :
-:      http://nimk.nl/syncstarter
+:      http://syncstarter.org
 
-The digital video syncstarter software is developed and employed at
-the NIMk Artlab to provide synced playback of multiple videos on
-multiple screens.
+
+The digital video syncstarter software is developed by the
+Montevideo/NIMk Artlab to provide synced playback of multiple high
+definition videos on multiple screens.
 
 In the video art field there are many artworks requiring the real-time
 synced playback of audio/video: HDSync provides such a functionality
 for HD decoders, to sync HD video playback on multiple devices.
-
-At NIMk we use to distribute multi-channel video artworks of artists
-in our catalogue, send them to galleries for exhibition with simple
-on/off activation.
 
 More information on our R&D deparment: http://nimk.nl/eng/research
 
@@ -52,6 +49,15 @@ A user manual is online at ftp://ftp.dyne.org/hdsync/hdsync_manual.pdf
 
 More documentation is included inside the doc/ directory
 
+** Building from source
+
+In order to compile HDSync you need to use a MIPSEL toolchain (like
+the one provided by Emdebian) and use it to compile this software:
+./configure --host=mipsel-linux-gnu is the correct target
+
+However, ready to use binaries (hdsync.app.bin) are provided on
+http://ftp.dyne.org/hdsync
+
 ** Support and warranty
 
 The purpose of this release is to make the project open source to
@@ -60,6 +66,7 @@ free and open source (GNU GPL v3) in the hope it will be useful, but
 WITHOUT ANY WARRANTY.
 
 In case you need assistance to setup your own HD sync-starter, you can
-contact us and ask a quote, see details on http://nimk.nl/syncstarter
+contact us and ask a quote, see details on
+http://syncstarter.org/service
 
 

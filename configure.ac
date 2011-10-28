@@ -5,13 +5,13 @@ dnl ==============================================================
 dnl require autoconf 2.60 (AS_ECHO/AS_ECHO_N)
 AC_PREREQ([2.60])
 
-AC_INIT([HDSync],[0.5.0],[jaromil@nimk.nl],[wdhdsync])
+AC_INIT([HDSync],[0.6.0],[jaromil@nimk.nl],[hdsync])
 AC_CONFIG_MACRO_DIR([m4])
 AC_CANONICAL_HOST
 
 dnl backwards compatibility for autoconf >= 2.64
 dnl PACKAGE_URL should be the fifth argument of AC_INIT
-m4_define([AC_PACKAGE_URL], [http://nimk.nl/hdsync])
+m4_define([AC_PACKAGE_URL], [http://syncstarter.org])
 AC_DEFINE(PACKAGE_URL, "AC_PACKAGE_URL", [Package URL])
 AC_SUBST(PACKAGE_URL, AC_PACKAGE_URL)
 

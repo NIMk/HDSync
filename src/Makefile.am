@@ -9,6 +9,9 @@ netcat_SOURCES = \
 	telnet.c \
 	udphelper.c
 
+noinst_HEADERS = avremote.h discover.h intl.h misc.h netcat.h	\
+		 parsers.h proto.h
+
 broadcaster_SOURCES = broadcaster.cpp
 
 hdsync_SOURCES = avremote.c avremote.h hdsync_cli.c parsers.c parsers.h

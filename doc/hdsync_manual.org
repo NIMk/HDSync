@@ -1,6 +1,6 @@
 #+TITLE: HDSync Setup Manual
-#+AUTHOR: Denis J. Roio <jaromil@nimk.nl>
-#+DATE: Version 0.5, Apri 2011
+#+AUTHOR: Denis J. Roio <jaromil@dyne.org>
+#+DATE: Version 0.6, September 2011
 
 #+LATEX_CLASS_OPTIONS: [a4paper,twocolumn] 
 
@@ -61,9 +61,10 @@ our software and the video to play.
 First *format the usb sticks with a journaled filesystem like the
 Linux Ext3* using tools like mkfs.ext3 from a GNU/Linux OS.
 
-Then place our *hdsync.app.bin* file on the USB sticks together with
-the *hdsync.conf* configuration file. The configuration is a plain
-text file that needs to be edited: set how many video channels you are
+Then place our *hdsync.app.bin* file (made available on
+[[http://ftp.dyne.org/hdsync]]) on the USB sticks together with the
+*hdsync.conf* configuration file. The configuration is a plain text
+file that needs to be edited: set how many video channels you are
 playing (*TOTAL_CHANNELS*), the unique channel number for this usb
 stick starting from 1 (*HDSYNC_CHANNEL*) and on what kind of network
 the sync-starters will connect: (*HDSYNC_NETWORK*) if the IP will be
@@ -135,8 +136,8 @@ If you use this software for your own art projects, this doesn't mean
 you need to use the same license we use and you can even sell artworks
 made with it; but you must specify reasonably that you are using:
 
- *HDSync, free and open source software developed by Jaromil at the
- Netherlands Media Art Institute*.
+ *HDSync, free and open source software developed by Jaromil in the
+ Montevideo/NIMk artlab*.
 
 #+begin_latex
 \pagebreak
