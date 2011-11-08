@@ -91,7 +91,8 @@ killall pandora_ep
 killall apache2
 killall smbtree
 
-
+# launch the watchdog hack by Michael
+$APPROOT/bin/watchdog.sh &
 
 if [ "$HDSYNC_CHANNEL" = "1" ]; then
     echo "Offering sync" >> /tmp/hdsync.log
