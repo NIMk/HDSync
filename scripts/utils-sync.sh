@@ -23,17 +23,20 @@ get_conf() {
 
 get_ip() {
     if [ "$HDSYNC_NETWORK" = "DYNAMIC" ]; then
-	echo "listening for DHCP assigned IP on the network"
-	config_tool -c LAN_TYPE='d'
-	IP=`get_conf IP2`
+        echo "`date +%T` listening for DHCP assigned IP on the network"
+        config_tool -c LAN_TYPE='d'
+        IP=`get_conf IP2`
+    elif [ "$HDSYNC_NETWORK" = "STATIC" ]; then
+        echo "`date +%T` setting a static network address"
+        IP="192.168.0.$HDSYNC_CHANNEL"
+        config_tool -c LAN_TYPE='s'
+        config_tool -c IP2=$IP
+        config_tool -c NETMASK2=255.255.255.0
+        ifconfig eth0 $IP netmask 255.255.255.0
+        echo "`date +%T` network interface configured with address $IP ..." 
     else
-	echo "setting a static network address"
-	IP="192.168.0.$HDSYNC_CHANNEL"
-	config_tool -c LAN_TYPE='s'
-	config_tool -c IP2=$IP
-	config_tool -c NETMASK2=255.255.255.0
-	ifconfig eth0 $IP netmask 255.255.255.0
-	echo "network interface configured with address $IP ..." 
+        IP=`get_conf IP2`
+        echo "`date +%T` network interface manualy configured with address $IP ..."
     fi
     export IP
 }
@@ -42,19 +45,19 @@ get_ip() {
 get_bins() {
     # wrapper to test in development on local paths
     if [ -z $1 ]; then
-	NC="../src/netcat"
-	BC="../src/broadcaster"
-	AV="../src/avremote"
-	SYNC="../src/hdsync"
+    NC="../src/netcat"
+    BC="../src/broadcaster"
+    AV="../src/avremote"
+    SYNC="../src/hdsync"
 
     else
-	NC="$APPROOT/bin/netcat"
-	BC="$APPROOT/bin/broadcaster"
-	AV="$APPROOT/bin/avremote"
-	SYNC="$APPROOT/bin/hdsync"
+    NC="$APPROOT/bin/netcat"
+    BC="$APPROOT/bin/broadcaster"
+    AV="$APPROOT/bin/avremote"
+    SYNC="$APPROOT/bin/hdsync"
     fi
 
-    echo "hdsync binaries found:"
+    echo "`date +%T` hdsync binaries found:"
     echo "$BC"
     echo "$NC"
     echo "$AV"
@@ -64,10 +67,17 @@ get_bins() {
 
 prepare_play() {
     file=`ls $USBROOT/video`
-    $SYNC -s localhost -p $UPNPPORT prepare "$USBROOT/video/$file"
+    $AV -p $UPNPPORT load "$USBROOT/video/$file"
 
-    # hdsync prepare makes: load, play and pause
     sync
 
-    echo "ready to play on `date +%T`"
+    $AV -p $UPNPPORT play
+
+    sync
+    sleep 1
+
+    $AV -p $UPNPPORT stop
+
+    # $AV -p $UPNPPORT pause
+    # sync
 }

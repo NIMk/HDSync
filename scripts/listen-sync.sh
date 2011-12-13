@@ -28,78 +28,56 @@ touch /tmp/hdsync.reply
     echo $answer >> /tmp/hdsync.reply
     done) &
 
-# # check that the video is prepared
-# while [ true ]; do
-#     sleep 3
-#     lsof | grep 'mnt.*video' > /dev/null
-#     if [ $? == 0 ]; then	# a video is loaded
-# 	break
-#     fi
-# done
-
 # loop continuously
 while [ true ]; do
-
-    sync
 
     sleep 10
 
     # check the state of the video
     state=`$AV -s localhost -p $UPNPPORT get 2>&1| awk '/^TInfo:/ {print $2}'`
+#    echo "`date +%T` state (avremote) is $state"
 
-    if [ "$state" == "NO_MEDIA_PRESENT" ]; then
+    lsof | grep video/?* > /dev/null
+    if [ $? == 1 ]; then    # no video is running
 
-        # will get ready for sync
-	prepare_play >> /tmp/hdsync.log
-
-    elif [ "$state" == "STOPPED" ]; then
-
-        # will get ready for sync again
-	prepare_play >> /tmp/hdsync.log
-
-    elif [ "$state" == "PAUSED_PLAYBACK" ]; then
-	# will sync start
-	
+    # will sync start
+    . $USBROOT/hdsync.conf
 	rm -f /tmp/hdsync.reply
 	touch /tmp/hdsync.reply
 	
-	echo "listening for offers on $IP"
+	echo "`date +%T` listening for offers on $IP"
 	
 	offer="`echo | $NC -c -u -l -p 3332`"
 	
-	echo "offered sync by $offer"
-	
+	echo "`date +%T` offered sync by $offer"
 	
         # repeat udp replies to offer until ack
-	echo "replying with our ip until ack"
+	echo "`date +%T` replying with our ip until ack"
 	ack=""
 	while [ "$ack" = "" ]; do
 	    sleep 1
 	    echo "$IP" | $NC -c -u $offer 3331
 	    echo -n "."
 	    ack=`cat /tmp/hdsync.reply`
-	done
+   	done
 	
-	echo "ack received, we are channel $ack"
+	echo "`date +%T` ack received, we are channel $ack"
+
 	
-	sync
-	
-	echo "ready: awaiting syncstarter signal"
+	echo "`date +%T` ready: awaiting syncstarter signal"
 	
 	
         # exit after connection (-e true)
 	$NC -c -u -l -p 3336 -e true
 	
 	if [ $HDSYNC_SLEEP ]; then
-	    sleep $HDSYNC_SLEEP
+	    usleep $HDSYNC_SLEEP
 	fi
 	
         # "press play on tape"
-	$SYNC -s localhost -p $UPNPPORT start
+	$AV -p $UPNPPORT play
 	
-	echo "sync playback started on `date +%T`"
-
+	echo "`date +%T` sync playback started"
     fi
 done
-
 

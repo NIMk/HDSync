@@ -70,7 +70,7 @@ get_ip
 get_bins $APPROOT
 
 if [ $HDSYNC_SLEEP ]; then
-    echo "SLEEP adjust set to $HDSYNC_SLEEP seconds" >> /tmp/hdsync.log
+    echo "SLEEP adjust set to $HDSYNC_SLEEP useconds" >> /tmp/hdsync.log
 fi
 
 UPNPPORT="`lsof -a -i4 -sTCP:LISTEN -c DMARender -F n | awk -v FS=':' '/^n/ {print $2}'`"
@@ -91,8 +91,19 @@ killall pandora_ep
 killall apache2
 killall smbtree
 
-# launch the watchdog hack by Michael
-$APPROOT/bin/watchdog.sh &
+# will get ready for play button
+prepare_play >> /tmp/hdsync.log
+
+if test $WATCHDOGTIMER -gt 0; then
+    #start watchdog timer
+    echo "starting watchdog, movielenght is $WATCHDOGTIMER" 
+    ps | grep watchdog | grep -v grep
+    if [ $? -ne 0 ]; then
+        rm -f /tmp/hdsync.error
+        touch /tmp/hdsync.error
+        $APPROOT/bin/watchdog.sh >> /tmp/hdsync.error &
+    fi
+fi
 
 if [ "$HDSYNC_CHANNEL" = "1" ]; then
     echo "Offering sync" >> /tmp/hdsync.log
@@ -101,3 +112,4 @@ else
     echo "Listening for sync offers" >> /tmp/hdsync.log
     $APPROOT/bin/listen-sync.sh >> /tmp/hdsync.log
 fi
+
