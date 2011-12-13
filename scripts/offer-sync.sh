@@ -4,7 +4,7 @@
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or 
+# the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
 # This program is distributed in the hope that it will be useful,
@@ -36,12 +36,20 @@ while [ true ]; do
 
     # check the state of the video
     state=`$AV -s localhost -p $UPNPPORT get 2>&1| awk '/^TInfo:/ {print $2}'`
-#    echo "`date +%T` state (avremote) is $state"
+    echo "`date +%T` state (avremote) is $state"
 
-    lsof | grep video/?* > /dev/null
-    if [ $? == 1 ]; then	# no video is running
+    if [ "$state" == "NO_MEDIA_PRESENT" ]; then
 
-    . $USBROOT/hdsync.conf
+	# will get ready for sync
+	prepare_play >> /tmp/hdsync.log
+
+    elif [ "$state" == "STOPPED" ]; then
+
+	# will get ready for sync again
+	prepare_play >> /tmp/hdsync.log
+
+    elif [ "$state" == "PAUSED_PLAYBACK" ]; then
+       # will sync start
 
 	rm -f /tmp/hdsync.reply
 	touch /tmp/hdsync.reply
@@ -52,14 +60,14 @@ while [ true ]; do
 	bcast=`echo $IP | awk 'BEGIN { FS="." } {print $1 "." $2 "." $3 }'`.255
 	echo "to netmask $bcast"
 
-        # send broadcast signals until somebody listens
+	# send broadcast signals until somebody listens
 	listeners=0
 	expected=`expr $TOTAL_CHANNELS - 1`
 	while [ $listeners -lt $expected ]; do
 	    echo -n "`date +%X` "
 	    $BC $bcast 3332 $IP
 	    listeners=`cat /tmp/hdsync.reply | sort | uniq | wc -w`
-        sleep 1
+	sleep 1
 	done
 
 #	echo "harvesting replies"
@@ -76,24 +84,22 @@ while [ true ]; do
 	echo "`date +%T` waiting for other players to get ready..."
     sync
 
-        # sync start in 2 seconds!
+	# sync start in 2 seconds!
     (sleep 2
 	$BC $bcast 3336 s >> /dev/null) &
 
-        # exit after connection (-e true)
+	# exit after connection (-e true)
     $NC -c -u -l -p 3336 -e true
 
     if [ $HDSYNC_SLEEP ]; then
-        usleep $HDSYNC_SLEEP
+	usleep $HDSYNC_SLEEP
     fi
 
-        # "press play on tape"
-	$AV -p $UPNPPORT play
-
+	# "press play on tape"
+	$SYNC -s localhost -p $UPNPPORT start
 	echo "`date +%T` sync playback started"
     fi
 
-$BC $bcast 3336 s >> /dev/null   # keep broadcasting in case someone didnt get the message
+# $BC $bcast 3336 s >> /dev/null   # keep broadcasting in case someone didnt get the message
 
 done
-

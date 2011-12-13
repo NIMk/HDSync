@@ -91,9 +91,6 @@ killall pandora_ep
 killall apache2
 killall smbtree
 
-# will get ready for play button
-prepare_play >> /tmp/hdsync.log
-
 if test $WATCHDOGTIMER -gt 0; then
     #start watchdog timer
     echo "starting watchdog, movielenght is $WATCHDOGTIMER" 

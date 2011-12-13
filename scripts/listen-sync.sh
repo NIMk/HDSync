@@ -4,7 +4,7 @@
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or 
+# the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
 # This program is distributed in the hope that it will be useful,
@@ -35,23 +35,31 @@ while [ true ]; do
 
     # check the state of the video
     state=`$AV -s localhost -p $UPNPPORT get 2>&1| awk '/^TInfo:/ {print $2}'`
-#    echo "`date +%T` state (avremote) is $state"
+    echo "`date +%T` state (avremote) is $state"
 
-    lsof | grep video/?* > /dev/null
-    if [ $? == 1 ]; then    # no video is running
+    if [ "$state" == "NO_MEDIA_PRESENT" ]; then
 
-    # will sync start
-    . $USBROOT/hdsync.conf
+	# will get ready for sync
+	prepare_play >> /tmp/hdsync.log
+
+    elif [ "$state" == "STOPPED" ]; then
+
+	# will get ready for sync again
+	prepare_play >> /tmp/hdsync.log
+
+    elif [ "$state" == "PAUSED_PLAYBACK" ]; then
+       # will sync start
+
 	rm -f /tmp/hdsync.reply
 	touch /tmp/hdsync.reply
-	
+
 	echo "`date +%T` listening for offers on $IP"
-	
+
 	offer="`echo | $NC -c -u -l -p 3332`"
-	
+
 	echo "`date +%T` offered sync by $offer"
-	
-        # repeat udp replies to offer until ack
+
+	# repeat udp replies to offer until ack
 	echo "`date +%T` replying with our ip until ack"
 	ack=""
 	while [ "$ack" = "" ]; do
@@ -60,24 +68,22 @@ while [ true ]; do
 	    echo -n "."
 	    ack=`cat /tmp/hdsync.reply`
    	done
-	
+
 	echo "`date +%T` ack received, we are channel $ack"
 
-	
+
 	echo "`date +%T` ready: awaiting syncstarter signal"
-	
-	
-        # exit after connection (-e true)
+
+
+	# exit after connection (-e true)
 	$NC -c -u -l -p 3336 -e true
-	
+
 	if [ $HDSYNC_SLEEP ]; then
 	    usleep $HDSYNC_SLEEP
 	fi
-	
-        # "press play on tape"
-	$AV -p $UPNPPORT play
-	
+
+	# "press play on tape"
+	$SYNC -s localhost -p $UPNPPORT start
 	echo "`date +%T` sync playback started"
     fi
 done
-
