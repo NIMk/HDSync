@@ -5,7 +5,7 @@ dnl ==============================================================
 dnl require autoconf 2.60 (AS_ECHO/AS_ECHO_N)
 AC_PREREQ([2.60])
 
-AC_INIT([HDSync],[0.6.0],[jaromil@nimk.nl],[hdsync])
+AC_INIT([HDSync],[0.6.1],[jaromil@nimk.nl],[hdsync])
 AC_CONFIG_MACRO_DIR([m4])
 AC_CANONICAL_HOST
 

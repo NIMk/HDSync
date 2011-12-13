@@ -6,4 +6,5 @@ Some of the next steps
 + Reach frame precise sync, idea:
   serve the video file through a pipe from a C program
 
++ Rewrite all network handshake using 0mq to lower latency
 
