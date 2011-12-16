@@ -43,6 +43,7 @@ if [ -z $1 ]; then
     cp -v src/avremote $appdir/bin &&
     cp -v src/hdsync $appdir/bin &&
     cp -v scripts/*-sync.sh $appdir/bin &&
+    cp -v scripts/watchdog.sh $appdir/bin &&
     cp -v scripts/S88hdsync $appdir/etc/init.d &&
     chmod a+x $appdir/etc/init.d/S88hdsync &&
     cp -v README $appdir &&
